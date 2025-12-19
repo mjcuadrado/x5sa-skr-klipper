@@ -1,0 +1,5 @@
+*.log
+*.tmp
+*.bak
+printer_data/logs/
+printer_data/gcodes/
