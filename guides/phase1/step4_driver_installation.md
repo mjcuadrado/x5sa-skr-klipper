@@ -76,6 +76,40 @@ Instalar en este orden (de más fácil a más difícil acceso):
 
 ---
 
+## 🔧 PASO ADICIONAL: Instalación de Disipadores
+
+**Si tu kit incluye disipadores de aluminio adhesivos:**
+
+### Procedimiento (para cada driver):
+
+1. **Limpiar superficie del chip TMC2209:**
+   - Usar alcohol isopropílico y paño sin pelusa
+   - Dejar secar completamente (1-2 minutos)
+
+2. **Aplicar disipador:**
+   - Retirar film protector del adhesivo térmico
+   - Centrar disipador sobre el chip principal (el más grande)
+   - Presionar firmemente 10-15 segundos
+   - Verificar que está bien adherido
+
+3. **Verificar:**
+   - Disipador centrado sobre el chip
+   - No toca componentes adyacentes
+   - Bien adherido (no se mueve)
+
+4. **Repetir para los 5 drivers**
+
+### Validación
+
+- [ ] 5 disipadores instalados
+- [ ] Todos centrados sobre chips principales
+- [ ] Bien adheridos
+- [ ] No interfieren con componentes cercanos
+
+**Tiempo de curado:** Esperar 10 minutos antes de manipular la placa.
+
+---
+
 ## ➡️ Siguiente Paso
 
 **[Step 5: Verificación Visual Final](step5_verification.md)**
@@ -90,4 +124,4 @@ Instalar en este orden (de más fácil a más difícil acceso):
 ---
 
 **Estado:** ✅ Completado (2025-12-20)
-**Drivers instalados:** 5× TMC2209 (X, Y, Z, E0, E1) - Orientación correcta, DIAG pins doblados
+**Drivers instalados:** 5× TMC2209 (X, Y, Z, E0, E1) - Orientación correcta, DIAG pins doblados, disipadores instalados
