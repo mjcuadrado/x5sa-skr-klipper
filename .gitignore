@@ -3,3 +3,4 @@
 *.bak
 printer_data/logs/
 printer_data/gcodes/
+.DS_Store
