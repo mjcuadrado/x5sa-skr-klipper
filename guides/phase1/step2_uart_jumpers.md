@@ -9,7 +9,7 @@
 ## 📋 Material Necesario
 
 - [ ] SKR 1.4 Turbo (del Step 1)
-- [ ] 10 jumpers (2 por cada eje)
+- [ ] 5 jumpers (1 por cada eje)
 - [ ] Pinzas de punta fina (recomendado)
 - [ ] Buena iluminación
 - [ ] Cámara / smartphone
@@ -75,15 +75,17 @@ Vista desde arriba del zócalo:
      │   DRIVER SOCKET │
      └─────────────────┘
          ↓  ↓  ↓
-      [MS0][MS1][MS2]
+      [MS1][MS2][MS3]
        ↑    ↑    ↑
     Izq  Centro Der
 ```
 
 **Configuración UART para TMC2209:**
-- **MS0 (izquierda):** ✅ Jumper insertado
-- **MS1 (centro):** ✅ Jumper insertado
-- **MS2 (derecha):** ❌ VACÍO (sin jumper)
+- **MS1 (izquierda):** ❌ VACÍO (sin jumper)
+- **MS2 (centro):** ❌ VACÍO (sin jumper)
+- **MS3 (derecha):** ✅ Jumper insertado
+
+**IMPORTANTE:** SKR 1.4 usa MS3 como pin UART. Solo se necesita 1 jumper por eje.
 
 ### Paso 2.2: Hacer Fotos "ANTES"
 
@@ -94,51 +96,48 @@ Antes de tocar nada, hacer las fotos 1-3 de la lista arriba (placa sin jumpers).
 1. Localizar el socket **X** (esquina superior izquierda generalmente)
 2. Localizar los 3 pares de pines debajo del socket
 3. Tomar un jumper
-4. Insertar en **MS0** (par izquierdo)
+4. Insertar en **MS3** (par derecho)
 5. Verificar que esté completamente insertado (no ladeado)
-6. Tomar otro jumper
-7. Insertar en **MS1** (par central)
-8. Verificar que esté completamente insertado
-9. **Dejar MS2 vacío**
+6. **Dejar MS1 y MS2 vacíos**
 
 **Resultado eje X:**
-- MS0: ✅ Jumper
-- MS1: ✅ Jumper
+- MS1: ❌ Vacío
 - MS2: ❌ Vacío
+- MS3: ✅ Jumper
 
 ### Paso 2.4: Repetir para Ejes Y, Z, E0, E1
 
 Repetir exactamente el mismo proceso para los otros 4 sockets:
 
 **Eje Y:**
-- MS0: ✅ Jumper
-- MS1: ✅ Jumper
+- MS1: ❌ Vacío
 - MS2: ❌ Vacío
+- MS3: ✅ Jumper
 
 **Eje Z:**
-- MS0: ✅ Jumper
-- MS1: ✅ Jumper
+- MS1: ❌ Vacío
 - MS2: ❌ Vacío
+- MS3: ✅ Jumper
 
 **Eje E0:**
-- MS0: ✅ Jumper
-- MS1: ✅ Jumper
+- MS1: ❌ Vacío
 - MS2: ❌ Vacío
+- MS3: ✅ Jumper
 
 **Eje E1:**
-- MS0: ✅ Jumper
-- MS1: ✅ Jumper
+- MS1: ❌ Vacío
 - MS2: ❌ Vacío
+- MS3: ✅ Jumper
 
 ### Paso 2.5: Verificación Visual
 
 Una vez insertados todos los jumpers:
 
-1. **Contar jumpers:** Debe haber exactamente **10 jumpers** (2 por eje × 5 ejes)
+1. **Contar jumpers:** Debe haber exactamente **5 jumpers** (1 por eje × 5 ejes)
 2. **Verificar cada eje:**
-   - ✅ MS0 tiene jumper
-   - ✅ MS1 tiene jumper
+   - ❌ MS1 está vacío
    - ❌ MS2 está vacío
+   - ✅ MS3 tiene jumper
 3. **Verificar que no hay jumpers ladeados**
 4. **Verificar que no hay jumpers en posiciones incorrectas**
 
@@ -152,12 +151,11 @@ Hacer todas las fotos 4-9 de la lista arriba (placa con jumpers).
 
 Antes de continuar al siguiente paso, verifica:
 
-- [ ] 10 jumpers insertados en total
-- [ ] Cada eje (X, Y, Z, E0, E1) tiene exactamente 2 jumpers
-- [ ] Todos en MS0 + MS1, ninguno en MS2
+- [ ] 5 jumpers insertados en total
+- [ ] Cada eje (X, Y, Z, E0, E1) tiene exactamente 1 jumper
+- [ ] Todos en MS3, MS1 y MS2 vacíos
 - [ ] Ningún jumper ladeado o mal insertado
-- [ ] Fotos "antes" realizadas (3 fotos)
-- [ ] Fotos "después" realizadas (6 fotos mínimo)
+- [ ] Foto "después" realizada y documentada
 
 ---
 
@@ -183,23 +181,24 @@ Antes de continuar al siguiente paso, verifica:
 3. Insertar con suavidad pero firmeza
 4. NO fuerces (riesgo de doblar pines)
 
-### Problema: Inserté jumpers en MS2 por error
+### Problema: Inserté jumpers en MS1 o MS2 por error
 
-**Síntoma:** Tengo jumpers en MS2
+**Síntoma:** Tengo jumpers en MS1 o MS2
 
 **Solución:**
-1. **REMOVER** todos los jumpers de MS2
-2. MS2 debe estar **completamente vacío** en todos los ejes
-3. Verificar configuración final: MS0✅ MS1✅ MS2❌
+1. **REMOVER** todos los jumpers de MS1 y MS2
+2. MS1 y MS2 deben estar **completamente vacíos** en todos los ejes
+3. Verificar configuración final: MS1❌ MS2❌ MS3✅
 
-### Problema: No sé dónde están MS0, MS1, MS2
+### Problema: No sé dónde están MS1, MS2, MS3
 
 **Síntoma:** No identifico los pares de pines
 
 **Solución:**
 1. Los pares están etiquetados en la serigrafía de la placa
-2. Desde el zócalo hacia abajo: MS0 (primero), MS1 (segundo), MS2 (tercero)
-3. Consultar [pinout oficial](https://github.com/bigtreetech/BIGTREETECH-SKR-V1.3/blob/master/BTT%20SKR%20V1.4/Hardware/BTT%20SKR%20V1.4PIN.pdf)
+2. Desde el zócalo hacia abajo: MS1 (primero), MS2 (segundo), MS3 (tercero)
+3. **MS3 es el más a la derecha** - ahí va el jumper
+4. Consultar [pinout oficial](https://github.com/bigtreetech/BIGTREETECH-SKR-V1.3/blob/master/BTT%20SKR%20V1.4/Hardware/BTT%20SKR%20V1.4PIN.pdf)
 
 ---
 
@@ -251,5 +250,5 @@ Una vez completada la configuración de jumpers y validación:
 
 ---
 
-**Estado:** ⏸️ Pendiente
-**Requiere:** Fotos del usuario antes de marcar como completado
+**Estado:** ✅ Completado (2025-12-20)
+**Configuración validada:** 5 jumpers en MS3, MS1 y MS2 vacíos
