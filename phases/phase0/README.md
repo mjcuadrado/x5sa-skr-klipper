@@ -39,7 +39,18 @@ Tag:
   - Avoid guesswork during board swap
 
 Photos:
-- `photos/phase0/2025-12-20_stock_board_power_endstops.jpg`
+### Stock control board — power and endstops
+
+The following image documents the original electronics state **before any modification**.
+
+Visible elements:
+- Main control board (stock)
+- Power input terminals
+- Heated bed output
+- Endstop connectors
+- Z probe wiring
+
+![Stock board – power and endstops](../../photos/phase0/2025-12-20_stock_board_power_endstops.jpg)g`
 
 ---
 
