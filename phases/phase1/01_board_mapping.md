@@ -38,3 +38,11 @@ Firmware issues are attributed to vendor configuration, not hardware failure.
 ## Sensors
 - Z probe: Omron TL-Q5MC1-Z
 
+## Photos (stock board)
+
+### Main board overview
+![Stock board overview](../../photos/phase1/2025-12-20_stock_board_mcu_closeup.jpg)
+
+### Main multipin harness
+![Stock main harness](../../photos/phase1/2025-12-20_stock_board_main_harness.jpg)
+
