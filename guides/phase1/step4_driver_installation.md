@@ -82,4 +82,12 @@ Instalar en este orden (de más fácil a más difícil acceso):
 
 ---
 
-**Estado:** ⏸️ Pendiente
+## 📸 Fotos de Referencia
+
+**Todos los drivers instalados:**
+![All drivers installed](../../photos/phase1/04_all_drivers_installed.jpg)
+
+---
+
+**Estado:** ✅ Completado (2025-12-20)
+**Drivers instalados:** 5× TMC2209 (X, Y, Z, E0, E1) - Orientación correcta, DIAG pins doblados
