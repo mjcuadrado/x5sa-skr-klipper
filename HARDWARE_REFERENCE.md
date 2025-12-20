@@ -15,7 +15,8 @@
 5. [MAX31865 + PT100](#max31865--pt100)
 6. [ADXL345](#adxl345)
 7. [Omron TL-Q5MC1-Z](#omron-tl-q5mc1-z)
-8. [Tablas de Referencia Rápida](#tablas-de-referencia-rápida)
+8. [Klipper Host System](#klipper-host-system)
+9. [Tablas de Referencia Rápida](#tablas-de-referencia-rápida)
 
 ---
 
@@ -675,6 +676,75 @@ Total: 10 jumpers (5 ejes × 2)
 
 ### Omron TL-Q5MC1-Z
 - [TL-Q Series Datasheet](https://docs.rs-online.com/147d/0900766b812c998e.pdf)
+
+---
+
+## KLIPPER HOST SYSTEM
+
+### Hardware
+
+| Componente | Especificación |
+|------------|----------------|
+| **Modelo** | HP ProDesk (miniPC) |
+| **Sistema Operativo** | openSUSE Linux |
+| **Función** | Host Klipper + compilación firmware |
+| **Acceso** | SSH desde ordenador personal |
+
+### Software Instalado
+
+| Software | Estado | Propósito |
+|----------|--------|-----------|
+| **Klipper** | ✅ Instalado | Firmware host |
+| **KlipperScreen** | ✅ Instalado | Interfaz de usuario local/táctil |
+| **Git** | ✅ Configurado | Control de versiones |
+| **Repositorio x5sa-skr-klipper** | ✅ Sincronizado | Configuraciones del proyecto |
+
+### Workflow de Compilación de Firmware
+
+**Proceso típico para flashear MCUs:**
+
+1. **SSH al miniPC:**
+   ```bash
+   ssh usuario@prodesk-ip
+   ```
+
+2. **Navegar al directorio de Klipper:**
+   ```bash
+   cd ~/klipper
+   ```
+
+3. **Configurar firmware para MCU específica:**
+   ```bash
+   make menuconfig
+   ```
+
+4. **Compilar firmware:**
+   ```bash
+   make clean
+   make
+   ```
+
+5. **Flashear a MCU:**
+   - **SKR 1.4 Turbo:** Método DFU o SD card
+   - **EBB42 CAN:** Vía CAN bus o USB
+
+### Configuraciones Klipper
+
+**Ubicación en el sistema:**
+- Configuraciones symlinkeadas desde el repositorio `x5sa-skr-klipper/klipper/`
+- Cambios versionados en Git
+- Sincronización bidireccional entre miniPC y repositorio
+
+**Archivos principales:**
+- `printer.cfg` - Configuración principal
+- `*.cfg` - Módulos específicos (macros, sensores, etc.)
+
+### Notas Importantes
+
+- **openSUSE:** Distribución menos común para Klipper que Debian/Ubuntu, pero completamente funcional
+- **KlipperScreen:** Indica pantalla táctil local conectada al miniPC
+- **Sin instalación necesaria:** Sistema ya operativo, no se documenta instalación desde cero
+- **Compilación remota:** Todo el proceso de compilación/flasheo se hace desde el miniPC vía SSH
 
 ---
 
