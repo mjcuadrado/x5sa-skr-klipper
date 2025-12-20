@@ -1,7 +1,14 @@
 # Phase 1 — Board mapping (Tronxy stock → SKR 1.4 Turbo)
 
 ## Stock board identification
-(To be completed)
+## MCU identification
+
+Stock controller uses an STM32F407 MCU.
+No visible board serigraphy without removing the board.
+This confirms standard STM32F4 compatibility (Marlin / Klipper capable).
+
+Firmware issues are attributed to vendor configuration, not hardware failure.
+
 
 ## MCU
 (To be completed)
