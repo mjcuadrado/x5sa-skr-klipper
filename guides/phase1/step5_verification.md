@@ -10,9 +10,9 @@
 
 ### Jumpers UART
 
-- [ ] 10 jumpers en total
-- [ ] Cada eje tiene MS0 + MS1
-- [ ] MS2 vacío en todos los ejes
+- [ ] 5 jumpers en total (1 por eje)
+- [ ] Cada eje tiene MS3 con jumper
+- [ ] MS1 y MS2 vacíos en todos los ejes
 - [ ] Ningún jumper ladeado
 
 ### Drivers TMC2209
@@ -21,6 +21,7 @@
 - [ ] Orientación correcta en todos (marca PIN 1 alineada)
 - [ ] Todos completamente asentados
 - [ ] Ningún pin doblado o fuera
+- [ ] Pin DIAG doblado en los 5 drivers (90° hacia un lado)
 
 ### Estado General
 
