@@ -2,7 +2,7 @@
 
 **Objetivo:** Documentar la orientación correcta de los drivers TMC2209 ANTES de insertarlos.
 
-**Tiempo estimado:** 15-20 minutos
+**Tiempo estimado:** 20-30 minutos
 
 **⚠️ CRÍTICO:** Insertar un driver mal orientado lo destruye permanentemente.
 
@@ -11,6 +11,7 @@
 ## 📋 Material Necesario
 
 - [ ] 5× drivers TMC2209 BigTreeTech (en bolsas antiestáticas)
+- [ ] Pinzas de punta fina
 - [ ] Lupa o buena iluminación
 - [ ] Cámara / smartphone
 - [ ] Alfombrilla antiestática (opcional pero recomendado)
@@ -83,10 +84,68 @@ Repetir para al menos 2 drivers más para confirmar que entiendes la orientació
 
 ---
 
+## 🔧 PASO ADICIONAL: Doblar Pin DIAG
+
+**¿Por qué doblar el pin DIAG?**
+
+Para usar **endstops mecánicos** (en lugar de sensorless homing), debemos evitar que el pin DIAG interfiera con las señales de los endstops.
+
+**Opciones:**
+- ❌ Cortar el pin (irreversible)
+- ✅ **Doblar el pin** (reversible, recomendado)
+
+### Procedimiento para TODOS los 5 drivers:
+
+**1. Quitar shroud plástico:**
+- El driver tiene una cubierta plástica negra sobre los pines
+- Tirar suavemente hacia arriba para removerla
+- **Guardar el shroud** (lo repondremos después de insertar)
+
+**2. Identificar pin DIAG:**
+- Buscar la etiqueta "DIAG" en el PCB del driver
+- Generalmente está en una esquina
+
+**3. Doblar el pin:**
+- Con pinzas de punta fina, sujetar el pin DIAG cerca de la base
+- Doblar **hacia un lado** aproximadamente 90°
+- El pin debe quedar paralelo al PCB
+- **NO romper** el pin, solo doblarlo suavemente
+
+**4. Verificar:**
+- Pin doblado completamente hacia un lado
+- No toca otros pines
+- No está roto
+
+**5. Repetir para los 5 drivers**
+
+### Fotos de Referencia
+
+**Driver con board (orientación):**
+![Driver con board](../../photos/phase1/03a_driver_with_board.jpg)
+
+**Ejemplo pin DIAG:**
+![Pin DIAG reference](../../photos/phase1/03b_diag_pin_reference.jpg)
+
+### Validación
+
+Para cada driver:
+- [ ] Shroud plástico removido (guardado)
+- [ ] Pin DIAG identificado
+- [ ] Pin DIAG doblado 90° hacia un lado
+- [ ] Pin no roto, solo doblado
+- [ ] No toca otros pines
+
+**Total: 5 drivers con pin DIAG doblado**
+
+---
+
 ## ➡️ Siguiente Paso
+
+Una vez los 5 drivers tengan el pin DIAG doblado:
 
 **[Step 4: Instalación Física Drivers](step4_driver_installation.md)**
 
 ---
 
-**Estado:** ⏸️ Pendiente
+**Estado:** ✅ Completado (2025-12-20)
+**Drivers preparados:** 5× TMC2209 con pin DIAG doblado, orientación verificada
