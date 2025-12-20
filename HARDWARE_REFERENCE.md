@@ -686,7 +686,7 @@ Total: 10 jumpers (5 ejes × 2)
 | Componente | Especificación |
 |------------|----------------|
 | **Modelo** | HP ProDesk (miniPC) |
-| **Sistema Operativo** | openSUSE Linux |
+| **Sistema Operativo** | Debian Linux |
 | **Función** | Host Klipper + compilación firmware |
 | **Acceso** | SSH desde ordenador personal |
 
@@ -741,7 +741,7 @@ Total: 10 jumpers (5 ejes × 2)
 
 ### Notas Importantes
 
-- **openSUSE:** Distribución menos común para Klipper que Debian/Ubuntu, pero completamente funcional
+- **Debian:** Distribución ideal para Klipper (mejor soporte y compatibilidad)
 - **KlipperScreen:** Indica pantalla táctil local conectada al miniPC
 - **Sin instalación necesaria:** Sistema ya operativo, no se documenta instalación desde cero
 - **Compilación remota:** Todo el proceso de compilación/flasheo se hace desde el miniPC vía SSH
