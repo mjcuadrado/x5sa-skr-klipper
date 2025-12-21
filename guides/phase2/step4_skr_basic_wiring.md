@@ -96,7 +96,8 @@ Conectar la alimentación, motores y cama caliente a la SKR 1.4 Turbo, estableci
 
 **Estado:** ✅ Alimentación conectada
 
-**Foto:** `photos/phase2/33_skr_dcin_power_connector.jpg`
+![Conexión alimentación 24V al conector DCIN de la SKR](../../photos/phase2/33_skr_dcin_power_connector.jpg)
+*Cable de alimentación 24V conectado al conector DCIN (barrel jack). Termorretráctil rojo identifica +24V, azul identifica GND.*
 
 ---
 
@@ -178,7 +179,8 @@ Conectar la alimentación, motores y cama caliente a la SKR 1.4 Turbo, estableci
 
 ---
 
-**Foto de motores conectados:** `photos/phase2/34_motors_connected_to_skr.jpg`
+![Todos los motores conectados a la SKR](../../photos/phase2/34_motors_connected_to_skr.jpg)
+*Vista general de la SKR con los 4 motores conectados: X, Y, Z (Z1), E1 (Z2). Cables de colores organizados, drivers TMC2209 con disipadores azules visibles.*
 
 **Resumen conexiones motores:**
 ```
@@ -235,7 +237,8 @@ La cama caliente requiere 2 conexiones independientes:
 
 **Estado:** ✅ Alimentación cama conectada a HB
 
-**Foto:** `photos/phase2/35_heated_bed_power_hb.jpg`
+![Cables de alimentación de cama caliente conectados al terminal HB](../../photos/phase2/35_heated_bed_power_hb.jpg)
+*Cables gruesos de alimentación de la cama caliente (rojo) conectados al terminal de tornillo HB. Tornillos apretados firmemente, sin hilos de cobre expuestos.*
 
 ---
 
@@ -266,7 +269,8 @@ La cama caliente requiere 2 conexiones independientes:
 
 **Estado:** ✅ Termistor cama conectado a TB
 
-**Foto:** `photos/phase2/36_heated_bed_thermistor_tb.jpg`
+![Termistor de cama caliente conectado al conector TB](../../photos/phase2/36_heated_bed_thermistor_tb.jpg)
+*Cable del termistor de cama caliente conectado al conector TB (2 pines). El termistor no tiene polaridad. Cable fino protegido de partes móviles.*
 
 ---
 
