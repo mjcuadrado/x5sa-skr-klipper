@@ -25,8 +25,10 @@ Esta guía es para ti si:
 | TMC2209 drivers | 5 | ~25-35€ | - |
 | Cables Dupont | Set | ~10€ | - |
 | Jumpers | 10+ | ~5€ | - |
+| **Conectores JST-XH 4-pin** (macho+hembra) | 2-4 | ~5€ | Para extensiones motores |
+| **Cable 4 conductores** | ~1-2m | ~5€ | Para extensiones motores |
 
-**Total mínimo:** ~70-90€
+**Total mínimo:** ~85-105€
 
 ### Upgrade Completo (Phase 1-11)
 
