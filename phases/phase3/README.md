@@ -8,14 +8,24 @@
 
 ## 📚 Documentación Principal
 
-### 🎯 Guía Completa de Integración
+### 🚀 Guía de Implementación - MONTAJE TEMPORAL ⭐
+📗 **[IMPLEMENTACION_TEMPORAL.md](../../guides/phase3/IMPLEMENTACION_TEMPORAL.md)** ← **USAR ESTA**
+- ✅ Plan específico para montaje temporal junto a SKR
+- 📋 Lista materiales reducida (cables cortos)
+- 🔧 Proceso paso a paso optimizado (3-4 horas)
+- ⚙️ Testing y verificación completa
+- 🎯 Solo 1 cable largo necesario (sensor Omron)
+- 💡 Troubleshooting específico montaje temporal
+
+### 🎯 Guía Completa de Integración (Referencia)
 📘 **[EBB42_INTEGRATION.md](../../guides/phase3/EBB42_INTEGRATION.md)**
 - ✅ Todas las decisiones tomadas y justificadas
 - 📋 Pinout completo de EBB42
-- 🔧 Plan de cableado detallado paso a paso
+- 🔧 Plan de cableado detallado (versión toolhead)
 - ⚙️ Configuración Klipper completa
 - 📝 Plan de implementación con 8 fases
 - 🛡️ Troubleshooting y seguridad
+- ⚠️ **Nota:** Asume montaje en toolhead (largo plazo)
 
 ### 📦 Checklist de Materiales
 📋 **[MATERIALS_CHECKLIST.md](../../guides/phase3/MATERIALS_CHECKLIST.md)**
@@ -107,14 +117,26 @@
 - ✅ Simplicidad de configuración
 - ✅ No requiere transceiver CAN
 
-### 2. Ubicación: Toolhead
-- ✅ EBB42 montada en toolhead
-- ✅ Phase 3-11: Montaje provisional (cinta + bridas)
-- ✅ Phase 12: Montaje definitivo en Stealthburner
+### 2. Ubicación: **TEMPORAL junto a SKR** (Frame Superior) 🔄
+**Decisión Phase 3:** Montaje temporal junto a SKR en frame superior
+
+**Razones:**
+- ✅ Cables stock del toolhead **ya llegan al frame superior**
+- ✅ Solo necesita 1 cable nuevo: Sensor Omron Z (~1.5m)
+- ✅ USB-C y 24V entre placas: cables cortos (~30cm)
+- ✅ Troubleshooting inicial más fácil (ambas placas accesibles)
+- ✅ Minimiza complejidad en fase de testing
+- ✅ Phase 12: Migración definitiva a toolhead con Stealthburner
+
+**Configuración temporal:**
+- EBB42 montada cerca de SKR (cinta + bridas)
+- Cables stock hotend → conectan directamente a EBB42
+- Único cable nuevo: Sensor Omron desde toolhead
 
 ### 3. Alimentación: 24V desde SKR
 - ✅ Cable dedicado 24V desde FAN2/HE1 de SKR
 - ✅ Always-on (100%)
+- ✅ **Cable corto** (~30cm) SKR → EBB42
 - ✅ Capacidad sobrada (~0.6A usados de 1-2A disponibles)
 
 ### 4. Conectores: Enfoque Mixto
@@ -131,8 +153,9 @@
 - ✅ Bed leveling garantizado funcional
 
 ### 7. Motor Extrusor
-- ⚠️ Phase 3-11: Motor E en SKR E0 (lateral)
-- ⏭️ Phase 12: Migra a EBB42 con Orbiter v2
+- ⚠️ Phase 3: Motor E en SKR E0 (lateral - posición actual)
+- ⚠️ NO se migra a EBB42 en esta fase
+- ⏭️ Phase 12: Migra a EBB42 con Orbiter v2 (toolhead directo)
 
 ---
 
@@ -187,30 +210,40 @@
 
 ### Arquitectura Final Phase 3
 
+**MONTAJE TEMPORAL - Ambas placas en Frame Superior:**
+
 ```
-┌─────────────────────────────────────────┐
-│ SKR 1.4 TURBO (Frame Superior)          │
-│                                         │
-│ USB    → Cable USB-C → EBB42            │
-│ FAN2   → 24V (always-on) → EBB42        │
-│ E0     ← Motor Extrusor (se queda aquí) │
-└─────────────────────────────────────────┘
-         ↓
-    USB-C + 24V (cable chain)
-         ↓
-┌─────────────────────────────────────────┐
-│ EBB42 USB (Toolhead - Provisional)      │
-│                                         │
-│ VIN/GND ← 24V Power                     │
-│ USB-C   ← USB desde SKR                 │
-│ HE      ← Calentador hotend             │
-│ TH0     ← Thermistor NTC 100K           │
-│ FAN0    ← Part cooling (PWM control)    │
-│ FAN1    ← Hotend fan (auto T>50°C)      │
-│ PROBE   ← Sensor Omron NC (fail-safe)   │
-│ E0      ← (sin usar hasta Phase 12)     │
-└─────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│ FRAME SUPERIOR (Nueva ubicación electrónica)          │
+│                                                        │
+│  ┌──────────────┐  USB-C    ┌───────────────────┐     │
+│  │ SKR 1.4 TB   │ ←(30cm)→  │ EBB42 (TEMPORAL)  │     │
+│  │              │           │                   │     │
+│  │ E0 ← Motor E │  24V      │ VIN/GND ← 24V     │     │
+│  │    (lateral) │ ←(30cm)→  │ USB-C   ← USB     │     │
+│  │              │           │                   │     │
+│  │ FAN2 → 24V ──┼───────────→ HE      ← Heater  │ ←── Cables stock
+│  │    always-on │           │ TH0     ← Therm   │ ←── toolhead
+│  └──────────────┘           │ FAN0    ← Part fan│ ←── (ya llegan aquí)
+│                             │ FAN1    ← HE fan  │ ←──
+│                             │ PROBE   ←─────────┼─┐
+│                             │ E0 (sin usar)     │ │
+│                             └───────────────────┘ │
+└────────────────────────────────────────────────────┼─┘
+                                                     │
+                                    Cable nuevo (~1.5m)
+                                    Sensor Omron Z
+                                                     ↓
+                                            ┌────────────┐
+                                            │ TOOLHEAD   │
+                                            │ (stock)    │
+                                            │            │
+                                            │ Sensor Z   │
+                                            │ Omron NC   │
+                                            └────────────┘
 ```
+
+**Phase 12:** EBB42 migra a toolhead con Stealthburner + Orbiter v2
 
 ---
 
@@ -235,31 +268,31 @@
 
 📋 **Ver checklist completo:** [MATERIALS_CHECKLIST.md](../../guides/phase3/MATERIALS_CHECKLIST.md)
 
-### Resumen Rápido
+### Resumen Rápido - MONTAJE TEMPORAL
 
 **Hardware:**
-- [ ] BTT EBB42 CAN V1.2
+- [x] BTT EBB42 CAN V1.2 (flasheada ✅)
 - [x] Sensor Omron TL-Q5MC1-Z (instalado)
 - [x] Thermistor stock NTC 100K
 - [x] Ventiladores stock (2x)
 
-**Cables:**
-- [ ] Cable USB-C a USB-C (~2m, datos)
-- [ ] Cable 2x1.5mm² para 24V (~2m)
-- [ ] 2x Anillos ferrita
-- [ ] Termorretráctil rojo/azul
+**Cables (VERSIÓN CORTA - Montaje temporal):**
+- [ ] Cable USB-C a USB-C **~30-50cm** (datos) - SKR ↔ EBB42
+- [ ] Cable 2x1.5mm² para 24V **~30-50cm** - SKR ↔ EBB42
+- [ ] Cable 3 hilos **~1.5-2m** - Sensor Omron (único cable largo)
+- [ ] Termorretráctil rojo/azul (varios tamaños)
 
 **Conectores:**
-- [ ] JST-XH 2-pin (x4 sets)
-- [ ] JST-XH 3-pin (x1 set)
-- [ ] Dupont 2-pin (x2 sets)
+- [ ] JST-XH 2-pin (x3 sets: 24V, heater, thermistor)
+- [ ] JST-XH 3-pin (x1 set: probe Omron)
+- [ ] Dupont 2-pin (x2 sets: fans)
 
 **Herramientas:**
 - [ ] Multímetro (CRÍTICO)
 - [ ] Crimpadora JST/Dupont
 - [ ] Destornilladores
 - [ ] Pistola silicona + hot glue
-- [ ] Cinta doble cara (montaje EBB42)
+- [ ] Cinta doble cara o bridas (montaje EBB42 temporal)
 
 ---
 
@@ -316,16 +349,25 @@ Si algo falla:
 **Ver detalles completos:** [FLASHEO_EBB42_EXITOSO.md](../../guides/phase3/FLASHEO_EBB42_EXITOSO.md)
 
 ### 2. Documentación Stock
-- [ ] Fotografiar toolhead actual (10+ fotos)
+- [ ] Fotografiar toolhead actual (10+ fotos, todos los ángulos)
+- [ ] Fotografiar conexiones actuales en frame superior
 - [ ] Etiquetar todos los cables existentes
 
-### 3. Fabricación Cables
-- [ ] Fabricar cable 24V (termorretráctil rojo/azul)
-- [ ] Preparar cable USB con ferritas
-- [ ] Crimpar conectores en componentes stock
+### 3. Fabricación Cables (Versión Temporal)
+- [ ] Cable 24V corto (~30-50cm): SKR FAN2 → EBB42 VIN
+- [ ] Cable USB-C corto (~30-50cm): SKR → EBB42
+- [ ] Cable sensor Omron largo (~1.5-2m): EBB42 → Toolhead
+- [ ] Verificar conectores JST-XH/Dupont en cables stock
 
-### 4. Implementación
-- [ ] Seguir plan detallado en `EBB42_INTEGRATION.md` Fases 1-8
+### 4. Montaje Físico
+- [ ] Montar EBB42 cerca de SKR (cinta doble cara + bridas)
+- [ ] Conectar cables cortos: USB-C y 24V (SKR ↔ EBB42)
+- [ ] Conectar cables stock toolhead a EBB42 (heater, therm, fans)
+- [ ] Tender cable sensor Omron a toolhead
+
+### 5. Verificación y Testing
+- [ ] Seguir checklist de testing en documentación
+- [ ] Verificar todas las funciones antes de operar
 
 ---
 
