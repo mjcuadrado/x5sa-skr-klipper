@@ -8,11 +8,20 @@
 
 ## 🎯 Objetivo de Phase 3
 
-Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes del extrusor/hotend a ella, y establecer comunicación **USB** con el MiniPC (host Klipper).
+Migrar todos los componentes **STOCK** del toolhead actual a la nueva placa EBB42 CAN V1.2, estableciendo comunicación **USB** con el MiniPC (host Klipper).
 
-**Resultado esperado:**
+**Filosofía Phase 3-5:** Impresora funcional básica con hardware stock
+- Usar TODO el hardware existente: motor extrusor stock, termistor stock, ventiladores stock, calentador stock
+- ÚNICA excepción: Sensor Z Omron (mejora clara y definitiva)
+- Objetivo: Sistema funcional que permita imprimir mejoras para Phase 12
+
+**Phase 12 (futuro):** Toolhead completo nuevo
+- Stealthburner + Orbiter 2.0/2.5 + Dragonfly BMO
+- AHÍ sí: PT100, ventiladores premium, todo el hardware nuevo
+
+**Resultado esperado Phase 3:**
 - EBB42 montada físicamente en toolhead
-- Todos los componentes toolhead conectados a EBB42
+- Todos los componentes stock migrados a EBB42
 - Cable USB tendido y conectado al MiniPC
 - Cable alimentación 24V desde SKR a EBB42
 - Sistema listo para firmware (Phase 4)
@@ -23,20 +32,25 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 
 ### Hardware confirmado:
 - ✅ BTT EBB42 CAN V1.2 (usaremos en **modo USB**, no CAN)
-- ✅ Sensor Omron TL-Q5MC1-Z (probe Z)
-- ✅ PT100 sensor + cartucho
+- ✅ Sensor Omron TL-Q5MC1-Z (probe Z - instalar en Phase 3)
 - ✅ Material USB (switch, cable alargador, cable corto) - **verificar tipo y longitud**
 - ✅ Cable alimentación 24V (para toolhead)
 - ✅ MiniPC con Debian + Klipper (host)
 - ✅ Toolhead stock actual (motor extrusor, hotend, ventiladores)
 
-### Hardware toolhead stock:
-- Motor extrusor (NEMA17)
-- Hotend con calentador
-- Termistor stock (¿tipo?)
-- Ventilador hotend (cooling)
-- Ventilador part cooling (capa)
+### Hardware toolhead stock (USAR en Phase 3):
+- Motor extrusor (NEMA17) - migrar a EBB42
+- Hotend con calentador stock - migrar a EBB42
+- Termistor stock (¿tipo?) - migrar a EBB42
+- Ventilador hotend (cooling) - migrar a EBB42
+- Ventilador part cooling (capa) - migrar a EBB42
 - Cables actuales
+
+### Hardware premium (NO usar hasta Phase 12):
+- PT100 sensor + cartucho - guardar para Phase 12 (Stealthburner)
+- Orbiter 2.0/2.5 - guardar para Phase 12
+- Dragonfly BMO - guardar para Phase 12
+- Ventiladores nuevos - guardar para Phase 12
 
 ---
 
@@ -74,32 +88,16 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 
 ### 2️⃣ Sensor de Temperatura Hotend
 
-**Problema:** ¿Usar termistor stock temporal o instalar PT100 directamente?
+**Decisión:** ✅ **Usar termistor stock**
 
-**Opciones:**
+**Razón:** Filosofía Phase 3-5 = hardware stock funcional
+- Termistor stock ya instalado y funcionando
+- PT100 se instalará en Phase 12 con toolhead completo nuevo (Stealthburner)
+- Evita complejidad innecesaria en migración inicial
 
-**A) Termistor stock temporal**
-- ✅ Más rápido (ya está instalado)
-- ✅ Menos pasos en Phase 3
-- ✅ Seguro (ya sabemos que funciona)
-- ⚠️ Requiere cambiar a PT100 después (Phase posterior)
-- ⚠️ Trabajo duplicado
-
-**B) PT100 directo**
-- ✅ Solución definitiva (no repetir trabajo)
-- ✅ Alta precisión desde inicio
-- ⚠️ Más complejo (verificar cableado MAX31865)
-- ⚠️ Puede añadir tiempo a Phase 3
-- ⚠️ Si falla, debugging más complejo
-
-**¿Qué prefieres?**
-- [ ] Opción A - Termistor stock temporal
-- [ ] Opción B - PT100 directo
-- [ ] Decidir después de ver complejidad
-
-**Información necesaria:**
-- ¿Qué tipo de termistor tiene el stock? (100K NTC típicamente)
-- ¿El cartucho PT100 es compatible mecánicamente con el hotend?
+**Información a documentar:**
+- [ ] Tipo de termistor stock (probablemente 100K NTC)
+- [ ] Verificar funcionamiento con multímetro
 
 ---
 
@@ -196,58 +194,32 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 
 ### 5️⃣ Ventiladores
 
-**Problema:** ¿Reutilizar ventiladores stock o cambiar?
+**Decisión:** ✅ **Usar ventiladores stock**
 
-**Ventiladores stock:**
-- Hotend cooling fan (siempre encendido)
-- Part cooling fan (controlado, capa)
+**Razón:** Filosofía Phase 3-5 = hardware stock funcional
+- Hotend cooling fan stock - migrar a EBB42
+- Part cooling fan stock - migrar a EBB42
+- Ventiladores premium se instalarán en Phase 12 con Stealthburner
 
-**Opciones:**
-
-**A) Reutilizar stock**
-- ✅ Rápido
-- ✅ Sin coste
-- ⚠️ Pueden ser ruidosos
-- ⚠️ Voltaje? (12V o 24V?)
-
-**B) Cambiar a Noctua u otros silenciosos**
-- ✅ Más silencioso
-- ✅ Mejor rendimiento potencial
-- ❌ Coste adicional
-- ❌ Tiempo adicional
-- ⚠️ Puede requerir adaptadores voltaje
-
-**¿Qué prefieres?**
-- [ ] Opción A - Reutilizar stock
-- [ ] Opción B - Cambiar a silenciosos (¿cuáles?)
-- [ ] Decidir después
-
-**Información necesaria:**
-- ¿Voltaje ventiladores stock? (12V o 24V)
-- ¿Funcionan correctamente?
+**Información a documentar:**
+- [ ] Voltaje ventiladores stock (12V o 24V)
+- [ ] Verificar funcionamiento correcto
+- [ ] Identificar tipo de conector
 
 ---
 
 ### 6️⃣ Calentador Hotend
 
-**Problema:** ¿Reutilizar cartucho calentador stock?
+**Decisión:** ✅ **Usar cartucho calentador stock**
 
-**Opciones:**
+**Razón:** Filosofía Phase 3-5 = hardware stock funcional
+- Cartucho stock ya instalado y funcionando
+- Cartucho nuevo se instalará en Phase 12 con Dragonfly BMO
 
-**A) Reutilizar cartucho stock**
-- ✅ Ya instalado
-- ✅ Sin coste
-- ⚠️ Potencia? (típicamente 40W en 24V)
-
-**B) Cambiar a cartucho nuevo 6x20mm**
-- ✅ Potencia conocida (50W típico)
-- ✅ Nuevo, fiable
-- ⚠️ Requiere desmontar hotend
-- ⚠️ Coste ~5-10€
-
-**¿Qué prefieres?**
-- [ ] Opción A - Reutilizar stock
-- [ ] Opción B - Cartucho nuevo 6x20mm
+**Información a documentar:**
+- [ ] Potencia cartucho stock (típicamente 40W en 24V)
+- [ ] Dimensiones (probablemente 6x20mm estándar)
+- [ ] Verificar resistencia con multímetro
 
 ---
 
@@ -260,28 +232,23 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 **A) Montar Omron en Phase 3**
 - ✅ Solución definitiva desde inicio
 - ✅ No usar endstop Z temporal
+- ✅ Mejora clara justificada (precisión, fiabilidad)
 - ⚠️ Requiere soporte impreso/adaptado
 - ⚠️ Más pasos en Phase 3
 
-**B) Sensor Z temporal (endstop mecánico) → Omron después**
+**B) Sensor Z temporal (sensorless TMC2209) → Omron en Phase 6-7**
 - ✅ Más rápido Phase 3
 - ✅ Omron en fase posterior con calma
-- ⚠️ Trabajo duplicado
-- ⚠️ Endstop Z stock ya desconectado
+- ⚠️ Sensorless Z menos fiable (pero funcional)
+- ✅ Permite imprimir soporte Omron con la propia impresora
 
-**C) Sensorless Z temporal (TMC2209)**
-- ✅ Sin hardware adicional
-- ⚠️ Menos fiable en Z (cama pesada)
-- ⚠️ No recomendado para Z
-
-**¿Qué prefieres?**
-- [ ] Opción A - Omron en Phase 3
-- [ ] Opción B - Temporal → Omron después
-- [ ] Opción C - Sensorless Z (no recomendado)
+**Recomendación:** Decidir según disponibilidad de soporte montaje
+- Si ya tienes soporte: Opción A
+- Si no tienes soporte: Opción B (usar sensorless, imprimir soporte, instalar Omron después)
 
 **Información necesaria:**
-- ¿Tienes soporte para montar Omron en toolhead?
-- ¿Necesita diseño custom?
+- [ ] ¿Tienes soporte para montar Omron en toolhead?
+- [ ] ¿Necesita diseño custom o hay modelo Tronxy X5SA disponible?
 
 ---
 
@@ -306,7 +273,7 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 1. Documentar toolhead stock
 2. Montar EBB42 en toolhead (sin desmontar)
 3. Ir cambiando cables uno a uno (stock → EBB42)
-4. Tender cable CAN
+4. Tender cables USB + 24V
 5. Verificar
 
 **Ventajas:** Menos invasivo, más controlado
@@ -331,9 +298,9 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 ### Step 2: Toma de Decisiones
 - Revisar todas las decisiones de este documento
 - Planificar solución montaje EBB42
-- Decidir termistor vs PT100
 - Seleccionar cable USB y planificar ruta
 - Planificar cable 24V alimentación
+- Decidir instalación sensor Omron (ahora vs después)
 
 ### Step 3: Preparación Hardware
 - Seleccionar cable USB adecuado del inventario
@@ -346,13 +313,13 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 - Verificar espacio y acceso
 - Asegurar firmemente
 
-### Step 5: Migración Componentes
-- Motor extrusor: Stock → EBB42 E0
-- Calentador hotend: Stock → EBB42 HE
-- Termistor/PT100: Stock → EBB42 TH0 o PT100
-- Ventilador hotend: Stock → EBB42 FAN0
-- Ventilador part cooling: Stock → EBB42 FAN1
-- Sensor Omron: Instalar y conectar a EBB42 PROBE
+### Step 5: Migración Componentes Stock
+- Motor extrusor stock: Stock → EBB42 E0
+- Calentador hotend stock: Stock → EBB42 HE
+- Termistor stock: Stock → EBB42 TH0
+- Ventilador hotend stock: Stock → EBB42 FAN0
+- Ventilador part cooling stock: Stock → EBB42 FAN1
+- Sensor Omron (si disponible): Instalar y conectar a EBB42 PROBE
 
 ### Step 6: Cableado USB + Alimentación
 - Tender cable USB desde MiniPC a toolhead
@@ -388,20 +355,27 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 - [ ] (Opcional) Ferritas para USB
 - [ ] (Opcional) Soldadura + soldador
 
-### Hardware
+### Hardware Phase 3
 - [ ] EBB42 CAN V1.2 (modo USB)
-- [ ] Sensor Omron TL-Q5MC1-Z
-- [ ] PT100 (si se decide instalar ahora)
+- [ ] Sensor Omron TL-Q5MC1-Z (si soporte disponible)
 - [ ] Soporte EBB42 (temporal o impreso)
 - [ ] MiniPC con Klipper (ya disponible)
+- [ ] Componentes stock toolhead (motor, termistor, ventiladores, calentador)
+
+### Hardware Phase 12 (NO usar en Phase 3)
+- PT100 sensor + cartucho - guardar
+- Orbiter 2.0/2.5 - guardar
+- Dragonfly BMO - guardar
+- Ventiladores premium - guardar
+- Stealthburner toolhead - guardar
 
 ---
 
 ## ⏱️ Estimación Temporal
 
 **Según decisiones:**
-- Opción rápida (temporal, termistor stock, USB inventario): ~3-4 horas
-- Opción completa (definitivo, PT100, Omron, cable custom): ~4-6 horas
+- Opción rápida (temporal, componentes stock, USB inventario, sensorless Z): ~3-4 horas
+- Opción completa (definitivo, componentes stock, Omron, cable custom): ~4-6 horas
 
 **Distribución:**
 - Documentación toolhead stock: 30-45 min
@@ -444,8 +418,8 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 ### Riesgo 2: Cable USB demasiado corto o tipo incorrecto
 - **Mitigación:** Verificar tipo conector EBB42, medir con margen, confirmar longitud antes de tender
 
-### Riesgo 3: Termistor/PT100 no lee correctamente
-- **Mitigación:** Verificar con multímetro, probar termistor stock primero
+### Riesgo 3: Termistor stock no lee correctamente
+- **Mitigación:** Verificar resistencia con multímetro antes de conectar, documentar tipo exacto
 
 ### Riesgo 4: Ventiladores voltaje incorrecto
 - **Mitigación:** Medir con multímetro ANTES de conectar
@@ -480,14 +454,16 @@ Instalar la placa EBB42 CAN V1.2 en el toolhead, conectar todos los componentes 
 
 ---
 
+**Decisiones tomadas (filosofía hardware stock):**
+1. ✅ Termistor: Usar stock (PT100 en Phase 12)
+2. ✅ Ventiladores: Usar stock (premium en Phase 12)
+3. ✅ Calentador: Usar stock (nuevo en Phase 12)
+
 **Pendiente decisiones del usuario:**
 1. Montaje EBB42 (temporal/impreso/adaptado)
-2. Termistor stock vs PT100 directo
-3. Cable USB: tipo conector, longitud, del inventario o nuevo, ruta
-4. Cable 24V: longitud, origen en SKR, destino en EBB42
-5. Ventiladores (stock/cambiar)
-6. Calentador (stock/nuevo)
-7. Sensor Omron (ahora/después)
-8. Estrategia trabajo (completo/in-situ)
+2. Cable USB: tipo conector, longitud, del inventario o nuevo, ruta
+3. Cable 24V: longitud, origen en SKR, destino en EBB42
+4. Sensor Omron (ahora si tienes soporte / después con sensorless)
+5. Estrategia trabajo (completo/in-situ)
 
 **Discutir antes de proceder.**

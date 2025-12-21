@@ -8,7 +8,12 @@
 
 ## 🎯 Objetivo del Inventario
 
-Verificar que disponemos de **TODO** el material necesario antes de iniciar Phase 3. Esta fase integrará la placa EBB42 en el toolhead usando comunicación USB.
+Verificar que disponemos de **TODO** el material necesario antes de iniciar Phase 3. Esta fase migrará todos los componentes **STOCK** del toolhead actual a la nueva placa EBB42 usando comunicación USB.
+
+**Filosofía Phase 3-5:** Base funcional con hardware stock
+- Migrar componentes stock existentes a EBB42
+- Sistema funcional que permite imprimir mejoras
+- Hardware premium (PT100, Orbiter, Dragonfly) se usará en Phase 12 con Stealthburner completo
 
 ---
 
@@ -17,9 +22,15 @@ Verificar que disponemos de **TODO** el material necesario antes de iniciar Phas
 ### Hardware Principal
 
 - [x] **BTT EBB42 CAN V1.2** (la usaremos en modo USB, no CAN)
-- [x] **Omron TL-Q5MC1-Z** - Sensor inductivo de alta precisión para Z probing
-- [x] **PT100 sensor** (1.5m, Y-terminal) - Sensor de temperatura de alta precisión
+- [x] **Omron TL-Q5MC1-Z** - Sensor inductivo de alta precisión para Z probing (instalar si soporte disponible)
 - [x] **MiniPC con Debian + Klipper** - Host ya configurado y funcional
+
+### Hardware Premium (Phase 12, NO usar en Phase 3)
+
+- [x] **PT100 sensor** (1.5m, Y-terminal) - Para Phase 12 con Stealthburner
+- [x] **Orbiter 2.0/2.5** - Para Phase 12 con Stealthburner
+- [x] **Dragonfly BMO** - Para Phase 12 con Stealthburner
+- [x] **Ventiladores premium** - Para Phase 12 con Stealthburner
 
 ### Material USB
 
@@ -72,21 +83,21 @@ Verificar que disponemos de **TODO** el material necesario antes de iniciar Phas
 
 ### Ventiladores
 
-**Ventiladores del toolhead (decisión pendiente: stock vs upgrade):**
+**Decisión:** ✅ **Usar ventiladores stock en Phase 3**
+
+**Ventiladores del toolhead stock:**
 
 - [ ] **Part cooling fan** (ventilador de capa)
-  - Stock: Verificar estado y specs
-  - Upgrade: ¿5015 blower? ¿Noctua?
-  - **ACCIÓN:** Decidir si usamos stock o upgrade
+  - Usar ventilador stock actual
+  - Verificar voltaje (12V o 24V)
+  - Verificar funcionamiento correcto
+  - Upgrade se hará en Phase 12 con Stealthburner
 
 - [ ] **Hotend fan** (ventilador de disipación)
-  - Stock: Verificar estado y specs
-  - Upgrade: ¿Noctua 40mm silencioso?
-  - **ACCIÓN:** Decidir si usamos stock o upgrade
-
-- [ ] **EBB42 cooling** (ventilador opcional para la placa)
-  - ¿Necesario? (probablemente no)
-  - Si se añade: 30mm o 40mm
+  - Usar ventilador stock actual
+  - Verificar voltaje (12V o 24V)
+  - Verificar funcionamiento correcto
+  - Upgrade se hará en Phase 12 con Stealthburner
 
 ### Tornillería y Fijación
 
@@ -112,39 +123,40 @@ Antes de desmontar nada, documentar **TODO** lo que hay actualmente en el toolhe
 
 ### Componentes Actuales a Identificar
 
-- [ ] **Motor extrusor:**
-  - Tipo: NEMA17? ¿Reductor?
-  - Conector: JST-XH 4-pin
-  - Cable: ¿Longitud actual?
-  - **Destino:** Se conectará a EBB42 puerto E0
+- [ ] **Motor extrusor stock:**
+  - Tipo: NEMA17 (identificar si tiene reductor)
+  - Conector: Identificar tipo
+  - Cable: Medir longitud actual
+  - **Destino:** Migrar a EBB42 puerto E0
 
-- [ ] **Hotend:**
-  - Tipo: ¿E3D clone? ¿Stock Tronxy?
-  - Cartucho calefactor: ¿24V? ¿Potencia?
-  - Dimensiones: ¿6x20mm estándar?
-  - **Destino:** Se conectará a EBB42 puerto HE0
+- [ ] **Hotend stock:**
+  - Tipo: Identificar (E3D clone / Stock Tronxy)
+  - Cartucho calefactor: Verificar voltaje y potencia
+  - Dimensiones: Medir (probablemente 6x20mm estándar)
+  - **Destino:** Migrar a EBB42 puerto HE0
 
-- [ ] **Termistor hotend:**
-  - Tipo actual: ¿100K NTC?
-  - Conector: ¿2-pin?
-  - **Decisión pendiente:** Usar stock o cambiar a PT100
+- [ ] **Termistor stock:**
+  - Tipo actual: Identificar (probablemente 100K NTC)
+  - Conector: Identificar tipo
+  - Verificar resistencia con multímetro
+  - **Destino:** ✅ Migrar a EBB42 puerto TH0 (PT100 en Phase 12)
 
-- [ ] **Ventilador part cooling:**
-  - Tensión: ¿24V?
-  - Tamaño: ¿5015 blower?
-  - Conector: ¿2-pin?
-  - **Destino:** Se conectará a EBB42 puerto FAN
+- [ ] **Ventilador part cooling stock:**
+  - Tensión: Verificar con multímetro (12V o 24V)
+  - Tamaño: Medir
+  - Conector: Identificar tipo
+  - **Destino:** ✅ Migrar a EBB42 puerto FAN1
 
-- [ ] **Ventilador hotend:**
-  - Tensión: ¿24V?
-  - Tamaño: ¿40mm?
-  - Conector: ¿2-pin?
-  - **Destino:** Se conectará a EBB42 puerto FAN (siempre ON)
+- [ ] **Ventilador hotend stock:**
+  - Tensión: Verificar con multímetro (12V o 24V)
+  - Tamaño: Medir
+  - Conector: Identificar tipo
+  - **Destino:** ✅ Migrar a EBB42 puerto FAN0 (siempre ON)
 
 - [ ] **Sensor Z actual:**
-  - ¿Tiene sensor inductivo stock?
-  - ¿Endstop mecánico?
-  - **Acción:** Será reemplazado por Omron TL-Q5MC1-Z
+  - Identificar si tiene sensor inductivo stock
+  - Identificar si tiene endstop mecánico
+  - **Acción:** Será reemplazado por Omron TL-Q5MC1-Z (o usar sensorless temporal)
 
 - [ ] **Cableado actual:**
   - ¿Cuántos cables llegan al toolhead?
@@ -204,46 +216,23 @@ Documentación fotográfica del toolhead stock:
 
 ---
 
+## ✅ Decisiones Tomadas - Filosofía Hardware Stock
+
+**Enfoque Phase 3-5:** Base funcional con componentes stock existentes
+- ✅ **Termistor:** Usar stock (PT100 en Phase 12 con Stealthburner)
+- ✅ **Ventiladores:** Usar stock (upgrade en Phase 12 con Stealthburner)
+- ✅ **Calentador:** Usar stock (nuevo en Phase 12 con Dragonfly BMO)
+- ✅ **Motor extrusor:** Usar stock (Orbiter en Phase 12 con Stealthburner)
+
+**Beneficio:** Sistema funcional rápido que permite imprimir mejoras para Phase 12
+
+**Phase 12:** Toolhead completo nuevo (Stealthburner + Orbiter + Dragonfly BMO + PT100 + ventiladores premium)
+
 ## ⚠️ Decisiones Pendientes
 
 Estas decisiones bloquean el inicio de Phase 3:
 
-### 1. Termistor Stock vs PT100 Directo
-
-**Opciones:**
-- **A)** Usar termistor stock inicialmente, PT100 en Phase 8
-- **B)** Instalar PT100 directamente en Phase 3
-
-**Ventajas A:**
-- Menos cambios simultáneos
-- Validar EBB42 primero con hardware conocido
-- PT100 requiere configuración específica
-
-**Ventajas B:**
-- Una sola intervención en hotend
-- PT100 más preciso desde inicio
-- Evitar reconfiguración posterior
-
-**Recomendación pendiente:** ¿Qué prefiere el usuario?
-
-### 2. Ventiladores Stock vs Upgrade
-
-**Opciones:**
-- **A)** Usar ventiladores stock en Phase 3, upgrade en Phase 12
-- **B)** Instalar ventiladores silenciosos (Noctua) directamente
-
-**Ventajas A:**
-- Menos variables en Phase 3
-- Validar sistema básico primero
-- Upgrade ventiladores es fácil después
-
-**Ventajas B:**
-- Impresora silenciosa desde inicio
-- Una sola intervención
-
-**Recomendación pendiente:** ¿Qué prefiere el usuario?
-
-### 3. Estrategia de Trabajo Toolhead
+### 1. Estrategia de Trabajo Toolhead
 
 **Opciones:**
 - **A)** Desmontar toolhead completamente, trabajar en mesa
@@ -260,18 +249,28 @@ Estas decisiones bloquean el inicio de Phase 3:
 
 **Recomendación:** Probablemente **A** (desmontar) para documentación profesional
 
+### 2. Sensor Omron - Instalación
+
+**Opciones:**
+- **A)** Instalar Omron en Phase 3 (si tienes soporte montaje)
+- **B)** Usar sensorless Z temporal, instalar Omron en Phase 6-7 después de imprimir soporte
+
+**Ventaja B:** Permite imprimir soporte custom con la propia impresora
+
+**Recomendación:** Decidir según disponibilidad de soporte
+
 ---
 
 ## 🎯 Próximos Pasos
 
 **Antes de iniciar Phase 3:**
 
-1. **Documentar toolhead stock** (fotos completas)
+1. **Documentar toolhead stock** (fotos completas, identificar componentes)
 2. **Medir longitudes** de cables USB y 24V necesarias
 3. **Identificar cable USB** específico del inventario
 4. **Verificar cable 24V** (sección 1.5mm²)
-5. **Decidir:** Termistor vs PT100
-6. **Decidir:** Ventiladores stock vs upgrade
+5. **Decidir:** Estrategia trabajo (mesa vs in-situ)
+6. **Decidir:** Sensor Omron (ahora vs después con sensorless)
 7. **Verificar tornillería** para montaje EBB42
 8. **Crear lista de compras** si falta algo
 
@@ -288,6 +287,8 @@ Estas decisiones bloquean el inicio de Phase 3:
 - **Focus en USB de calidad:** Blindado, con ferritas si es posible
 - **MiniPC ya funcional:** No requiere configuración adicional de host
 - **Klipper multi-MCU:** Ya soporta SKR + EBB42 simultáneamente
+- **Filosofía hardware stock:** PT100, Orbiter, Dragonfly BMO se guardan para Phase 12 (Stealthburner completo)
+- **Objetivo Phase 3-5:** Sistema funcional que permite imprimir mejoras
 
 ---
 
