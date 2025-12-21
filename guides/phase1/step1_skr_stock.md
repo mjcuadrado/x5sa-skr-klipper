@@ -66,6 +66,9 @@ Hacer las 4 fotos obligatorias listadas arriba.
 
 **Consejo:** Usa buena iluminación natural o luz blanca. Evita sombras y reflejos.
 
+![BTT SKR 1.4 Turbo en estado stock](../../photos/phase1/01_skr14turbo_stock.jpg)
+*SKR 1.4 Turbo nueva, vista general superior. Placa sin modificaciones, zócalos de drivers vacíos, sin jumpers instalados. Estado inicial documentado antes de cualquier configuración.*
+
 ---
 
 ## ✅ Validación

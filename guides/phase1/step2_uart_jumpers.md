@@ -145,6 +145,9 @@ Una vez insertados todos los jumpers:
 
 Hacer todas las fotos 4-9 de la lista arriba (placa con jumpers).
 
+![SKR 1.4 Turbo con jumpers UART configurados](../../photos/phase1/02_uart_jumpers_configured.jpg)
+*Vista general de la SKR con los 5 jumpers UART instalados. Cada eje (X, Y, Z, E0, E1) tiene un jumper en la posición MS3, con MS1 y MS2 vacíos. Configuración lista para comunicación UART con drivers TMC2209.*
+
 ---
 
 ## ✅ Validación
