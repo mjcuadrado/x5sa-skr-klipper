@@ -38,6 +38,32 @@
 - Configuración completa y verificación
 - Lecciones aprendidas y referencias oficiales
 
+📗 **[FLASH_EBB42_INSTRUCTIONS.md](../../guides/phase3/FLASH_EBB42_INSTRUCTIONS.md)**
+- Proceso paso a paso para flashear EBB42 CAN V1.2
+- Configuración correcta STM32G0B1 (USB mode)
+- Flasheo vía DFU mode
+- Verificación de detección USB
+
+📘 **[FLASHEO_EBB42_EXITOSO.md](../../guides/phase3/FLASHEO_EBB42_EXITOSO.md)** ✅
+- Caso de estudio completo del flasheo exitoso de EBB42
+- Troubleshooting: Necesidad de alimentación 24V y reset manual
+- Proceso completo DFU mode (offset 0x08000000)
+- Configuración dual-MCU (SKR + EBB42)
+- Lecciones aprendidas críticas (alimentación, jumper VUSB, reset)
+- Guía de troubleshooting detallada
+
+### 🔧 Configuración Multi-MCU
+📘 **[CONFIGURACION_DUAL_MCU.md](../../guides/phase3/CONFIGURACION_DUAL_MCU.md)** ✅
+- Guía completa de configuración múltiples MCUs en Klipper
+- Arquitectura del sistema (SKR + EBB42)
+- Sintaxis de pines multi-MCU (prefijos, modificadores)
+- Obtención y uso de Serial IDs correctos
+- Configuración de printer.cfg para [mcu] y [mcu EBBCan]
+- Comandos de verificación y debugging
+- Troubleshooting específico de dual-MCU
+- Ejemplos prácticos de extrusor, ventiladores, probe
+- Referencias y documentación oficial
+
 ---
 
 ## ✅ Estado Actual del Hardware
@@ -56,10 +82,21 @@
 
 **Documentación completa:** [FLASHEO_SKR_EXITOSO.md](../../guides/phase3/FLASHEO_SKR_EXITOSO.md)
 
-### EBB42 - PENDIENTE ⏳
-- ⏳ **Próximo paso:** Flashear firmware Klipper (USB mode)
-- ⏳ **Configuración:** Pendiente compilación y flasheo
-- ⏳ **Integración:** Pendiente cableado y montaje físico
+### EBB42 CAN V1.2 - COMPLETADA ✅
+**Fecha de flasheo exitoso:** 2025-12-21
+
+- ✅ **Chip identificado:** STM32G0B1CBT6 (ARM Cortex-M0+)
+- ✅ **Firmware compilado:** Klipper (STM32G0B1, USB mode, No bootloader)
+- ✅ **Configuración correcta:** STM32G0B1 + No bootloader + USB (PA11/PA12) + 8MHz crystal
+- ✅ **Flasheo vía DFU:** Exitoso (offset 0x08000000)
+- ✅ **Detección USB:** `usb-Klipper_stm32g0b1xx_12345-if00`
+- ✅ **Alimentación 24V:** Conectada y funcionando (cable AWG 20/18)
+- ✅ **Jumper VUSB:** Instalado (requerido para modo USB)
+- ✅ **Configuración dual-MCU:** SKR + EBB42 ambas detectadas en Klipper
+- ✅ **printer.cfg:** Configurado con [mcu] y [mcu EBBCan]
+- ✅ **Lecciones críticas:** Necesidad de alimentación 24V + reset manual post-DFU
+
+**Documentación completa:** [FLASHEO_EBB42_EXITOSO.md](../../guides/phase3/FLASHEO_EBB42_EXITOSO.md)
 
 ---
 
@@ -268,11 +305,15 @@ Si algo falla:
 
 **Ver detalles completos:** [FLASHEO_SKR_EXITOSO.md](../../guides/phase3/FLASHEO_SKR_EXITOSO.md)
 
-### 1. Preparación EBB42
-- [ ] Leer completamente [`EBB42_INTEGRATION.md`](../../guides/phase3/EBB42_INTEGRATION.md)
-- [ ] Verificar materiales con [`MATERIALS_CHECKLIST.md`](../../guides/phase3/MATERIALS_CHECKLIST.md)
-- [ ] Compilar firmware Klipper para EBB42 (USB mode)
-- [ ] Flashear EBB42 y verificar detección USB
+### 1. Preparación EBB42 (COMPLETADO ✅)
+- [x] Leer completamente [`EBB42_INTEGRATION.md`](../../guides/phase3/EBB42_INTEGRATION.md)
+- [x] Verificar materiales con [`MATERIALS_CHECKLIST.md`](../../guides/phase3/MATERIALS_CHECKLIST.md)
+- [x] Compilar firmware Klipper para EBB42 (USB mode)
+- [x] Flashear EBB42 y verificar detección USB
+- [x] Configurar dual-MCU en printer.cfg
+- [x] Verificar ambas MCUs detectadas en Klipper
+
+**Ver detalles completos:** [FLASHEO_EBB42_EXITOSO.md](../../guides/phase3/FLASHEO_EBB42_EXITOSO.md)
 
 ### 2. Documentación Stock
 - [ ] Fotografiar toolhead actual (10+ fotos)
