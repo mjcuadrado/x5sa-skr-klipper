@@ -17,7 +17,7 @@
 
 **Motores originales:**
 - X/Y (CoreXY): 2× motores NEMA17, ~1.1A corriente típica
-- Z: 1× motor NEMA17 con tornillo/husillo
+- Z: 2× motores NEMA17 con leadscrew (dual Z independiente)
 - Extrusor: 1× motor NEMA17, ~1.05A
 
 **Problemas conocidos del stock:**
@@ -54,230 +54,195 @@
 **Estado:** Baseline, inventario, auditoría
 **Documentación:** Estado inicial de impresora stock
 
-### PHASE 1 🔄 (En curso)
+### PHASE 1 ✅ (Completada 2025-12-20)
 **Nombre:** SKR 1.4 Turbo - Preparación de electrónica
 **Objetivo:** Placa lista con drivers, SIN cablear
-**Duración estimada:** 2-3 horas
+**Duración real:** 2 horas
 
-**Pasos:**
+**Pasos completados:**
 1. SKR stock documentada
-2. Jumpers UART configurados (10 jumpers)
+2. Jumpers UART configurados (10 jumpers MS3)
 3. Orientación drivers documentada
 4. Drivers instalados físicamente
 5. Verificación visual final
 
-**Resultado:** SKR con 5× TMC2209 correctamente instalados, sin cables, sin alimentación
+**Resultado:** SKR con 5× TMC2209 correctamente instalados, disipadores, sin cables, sin alimentación
 
-### PHASE 2 📋 (Pendiente)
-**Nombre:** Cableado básico (motores + endstops + alimentación)
-**Objetivo:** Impresora moviendo ejes sin hotend
+### PHASE 2 ✅ (Completada 2025-12-21)
+**Nombre:** SKR Cableado Básico
+**Objetivo:** SKR montada y cableada (motores, cama, alimentación)
+**Duración real:** 6 horas
+
+**Decisión arquitectónica crítica:**
+- SKR montada en posición superior (frame superior)
+- EBB42 CAN integrado desde inicio (no toolhead stock temporal)
+- Sensorless homing X/Y (TMC2209 StallGuard, sin endstops físicos)
+- Sensor Z en EBB42 (Omron TL-Q5MC1-Z)
+
+**Pasos completados:**
+1. Documentación wiring stock completo (31 fotos)
+2. Desconexión completa electrónica stock
+3. Montaje SKR posición superior + fabricación extensiones:
+   - Cable extensión Motor Z2 (JST-XH 4-pin, 60cm)
+   - Cable extensión 24V (50cm, termorretráctil rojo/azul)
+4. Cableado básico SKR:
+   - Alimentación 24V → DCIN
+   - Motores X, Y, Z1, Z2 (E1 para segundo Z)
+   - Cama caliente (power HB + termistor TB)
+5. Verificación final (36 fotos totales)
+
+**Resultado:** SKR cableada y lista para EBB42 CAN (Phase 3)
+
+### PHASE 3 📋 (En curso) ⬅️ SIGUIENTE
+**Nombre:** Toolhead EBB42 CAN
+**Objetivo:** Toolhead completo con comunicación CAN bus
 **Duración estimada:** 4-6 horas
 
-**Pasos:**
-1. Documentar pinout completo SKR 1.4 Turbo
-2. Etiquetar TODOS los cables del stock
-3. Desconectar electrónica stock (fotos antes/después)
-4. Cablear alimentación 24V + fusibles
-5. Cablear motores X, Y, Z (identificar fase A/B)
-6. Cablear endstops X, Y, Z
-7. Verificación continuidad (multímetro)
-8. Primera alimentación (sin motores conectados)
-9. Conectar motores y probar con `STEPPER_BUZZ`
+**Pasos planeados:**
+1. Documentar toolhead stock actual (fotos)
+2. Desconectar cables toolhead de stock
+3. Instalar EBB42 en toolhead (diseñar/imprimir soporte si necesario)
+4. Conectar componentes a EBB42:
+   - Motor extrusor (E0 driver integrado)
+   - Calentador hotend
+   - Termistor hotend (o PT100 directo)
+   - Ventiladores (hotend fan + part cooling)
+   - Sensor Omron TL-Q5MC1-Z (probe Z)
+5. Fabricar cable CAN (4 hilos):
+   - Cat6 para CAN_H/CAN_L (par trenzado)
+   - Cable alimentación separado para 24V/GND
+   - Identificación con termorretráctil
+6. Tender cable CAN desde SKR a toolhead
+7. Conectar CAN bus (verificar polaridad, terminación 120Ω)
 
-**Resultado:** Ejes X, Y, Z moviéndose correctamente, homing funcional
-
-### PHASE 3 📋 (Pendiente)
-**Nombre:** Firmware Klipper + configuración básica
-**Objetivo:** Klipper corriendo en SKR 1.4 Turbo
-**Duración estimada:** 2-3 horas
-
-**Pasos:**
-1. Compilar firmware Klipper (menuconfig para LPC1769 @ 120MHz)
-2. Flashear vía SD card (firmware.bin)
-3. Configurar printer.cfg base (CoreXY)
-4. Configurar TMC2209 en modo UART
-5. Tuning corriente de motores
-6. Configurar endstops y homing
-7. Probar movimientos manuales
-8. Calibrar pasos/mm (rotation_distance)
-
-**Resultado:** Impresora respondiendo a comandos Klipper, movimientos precisos
+**Resultado:** Toolhead con EBB42 montado, cableado, listo para firmware
 
 ### PHASE 4 📋 (Pendiente)
-**Nombre:** Cama caliente + sensor inductivo
-**Objetivo:** Bed heating + Z probing funcional
-**Duración estimada:** 2-3 horas
+**Nombre:** Firmware Klipper + Configuración Completa
+**Objetivo:** Klipper corriendo en SKR + EBB42, sistema funcional
+**Duración estimada:** 3-4 horas
 
 **Pasos:**
-1. Cablear cama caliente (verificar potencia <144W o usar MOSFET externo)
-2. Cablear termistor de cama
-3. Configurar heater_bed en Klipper
-4. PID tuning de cama
-5. Instalar sensor inductivo Omron TL-Q5MC1-Z
-6. Cablear sensor (Marrón=24V, Azul=GND, Negro=Señal)
-7. Configurar [probe] en Klipper
-8. Calibrar X/Y offset
-9. Calibrar Z offset con PROBE_CALIBRATE
-10. Crear bed mesh (5×5 o 7×7)
+1. **Compilar y flashear firmware:**
+   - Klipper para SKR 1.4 Turbo (LPC1769 @ 120MHz)
+   - Klipper para EBB42 CAN (STM32G0B1, modo CAN)
+   - Obtener canbus_uuid con `canbus_query.py`
 
-**Resultado:** Cama calentando correctamente, nivelación automática funcional
+2. **Configurar printer.cfg base:**
+   - MCU principal (SKR) + MCU toolhead (EBB42)
+   - Cinemática CoreXY
+   - TMC2209 en modo UART (X, Y, Z1, Z2, E0)
+   - Sensorless homing X/Y (StallGuard)
+   - Dual Z independiente
+
+3. **Configurar toolhead:**
+   - Extrusor (motor + heater + termistor/PT100)
+   - Ventiladores (hotend + part cooling)
+   - Probe Omron (Z homing + bed mesh)
+
+4. **Configurar cama caliente:**
+   - Heater_bed + termistor
+   - PID tuning cama
+
+5. **Calibraciones iniciales:**
+   - Tuning corriente TMC2209
+   - Sensorless homing sensitivity
+   - Probe Z offset
+   - Bed mesh básico (5×5)
+   - PID tuning hotend
+   - Rotation_distance extrusor
+
+**Resultado:** Sistema completamente funcional, listo para primera impresión
 
 ### PHASE 5 📋 (Pendiente)
-**Nombre:** Toolhead stock (temporal)
-**Objetivo:** Primera impresión con hotend stock
+**Nombre:** Primera Impresión + Calibraciones Básicas
+**Objetivo:** Primera impresión exitosa + ajustes básicos
 **Duración estimada:** 3-4 horas
 
 **Pasos:**
-1. Cablear motor extrusor
-2. Cablear hotend heater
-3. Cablear termistor hotend
-4. Configurar [extruder] en Klipper
-5. PID tuning hotend
-6. Calibrar rotation_distance (test de extrusión)
-7. Cablear ventiladores (hotend fan + part cooling)
-8. Test de temperatura (verificar lecturas)
-9. Test de extrusión en frío
-10. Primera impresión de prueba (cubo de calibración)
+1. Verificación pre-impresión completa
+2. Test de extrusión (100mm → 100mm real)
+3. First layer calibration (papel test)
+4. Impresión calibración (cubo XYZ 20mm)
+5. Ajustes flow rate inicial
+6. Retraction tuning básico
+7. Temperature tower (material preferido)
+8. Bed mesh refinado si necesario
+9. Macros básicas (START_PRINT, END_PRINT)
+10. Test prints funcionales
 
-**Resultado:** Impresora funcional con hardware stock, calidad baseline establecida
+**Resultado:** Impresora imprimiendo correctamente, calidad baseline establecida
 
 ### PHASE 6 📋 (Pendiente)
-**Nombre:** Instalación DC-DC converter + preparación CAN
-**Objetivo:** Alimentación estable 24V para EBB42
-**Duración estimada:** 2 horas
-
-**Pasos:**
-1. Instalar DC-DC XL4015 (24V → 24V regulado)
-2. Calibrar voltaje salida (exactamente 24V)
-3. Cablear salida a conector dedicado para EBB42
-4. Configurar terminación CAN (resistencia 120Ω)
-5. Preparar cables CAN (CAN_H, CAN_L, 24V, GND)
-6. Documentar pinout CAN en SKR 1.4 Turbo
-
-**Resultado:** Alimentación estable lista para EBB42
-
-### PHASE 7 📋 (Pendiente)
-**Nombre:** Instalación física EBB42 en toolhead
-**Objetivo:** EBB42 montada, sin configurar
-**Duración estimada:** 3-4 horas
-
-**Pasos:**
-1. Diseñar/imprimir soporte para EBB42
-2. Instalar EBB42 en toolhead
-3. Verificar aislamiento eléctrico (no tocar metal)
-4. Pasar cables CAN por drag chain
-5. Conectar CAN bus (verificar polaridad)
-6. Flashear firmware Klipper en EBB42 (modo CAN)
-7. Obtener canbus_uuid con `canbus_query.py`
-8. Configurar [mcu EBBCan] en printer.cfg
-
-**Resultado:** EBB42 comunicando vía CAN, lista para conectar componentes
-
-### PHASE 8 📋 (Pendiente)
-**Nombre:** Migración extrusor a EBB42
-**Objetivo:** Motor extrusor controlado por EBB42
-**Duración estimada:** 2 horas
-
-**Pasos:**
-1. Desconectar motor extrusor de SKR
-2. Conectar motor a EBB42
-3. Configurar [extruder] con pins EBB42
-4. Configurar [tmc2209 extruder] en UART
-5. Probar movimiento con `STEPPER_BUZZ`
-6. Test de extrusión
-7. Recalibrar rotation_distance si es necesario
-
-**Resultado:** Extrusor funcionando desde EBB42
-
-### PHASE 9 📋 (Pendiente)
-**Nombre:** Instalación PT100 + MAX31865
-**Objetivo:** Sensor de temperatura de alta precisión
-**Duración estimada:** 2-3 horas
-
-**Pasos:**
-1. Remover termistor stock del hotend
-2. Instalar cartucho PT100 (verificar contacto térmico)
-3. Cablear PT100 a EBB42 (modo 3-wire recomendado)
-4. Configurar MAX31865 en printer.cfg
-5. Verificar lecturas de temperatura ambiente
-6. PID tuning con PT100
-7. Comparar precisión vs termistor stock
-8. Test de calentamiento (0°C → 250°C)
-
-**Resultado:** Hotend con sensor PT100, precisión ±1°C
-
-### PHASE 10 📋 (Pendiente)
-**Nombre:** ADXL345 + Input Shaper
-**Objetivo:** Optimización de vibraciones
+**Nombre:** Input Shaper + ADXL345
+**Objetivo:** Optimización de vibraciones y alta velocidad
 **Duración estimada:** 2-3 horas
 
 **Pasos:**
 1. Verificar ADXL345 integrado en EBB42
 2. Configurar [adxl345] en printer.cfg
-3. Probar con `ACCELEROMETER_QUERY`
-4. Ejecutar `TEST_RESONANCES AXIS=X`
-5. Ejecutar `TEST_RESONANCES AXIS=Y`
-6. Generar gráficos de resonancia
-7. Analizar frecuencias problemáticas
-8. Configurar [input_shaper]
-9. Probar impresión a alta velocidad (100-150 mm/s)
-10. Ajustar max_accel según resultados
+3. Ejecutar `TEST_RESONANCES AXIS=X`
+4. Ejecutar `TEST_RESONANCES AXIS=Y`
+5. Generar gráficos de resonancia
+6. Analizar frecuencias problemáticas
+7. Configurar [input_shaper] con valores óptimos
+8. Ajustar max_accel y max_velocity
+9. Test de ringing/ghosting
+10. Impresión a alta velocidad (100-150 mm/s)
 
-**Resultado:** Input shaping configurado, vibraciones eliminadas
+**Resultado:** Input shaping configurado, vibraciones eliminadas, alta velocidad
 
-### PHASE 11 📋 (Pendiente)
-**Nombre:** Calibraciones finales
-**Objetivo:** Sistema completamente calibrado
+### PHASE 7 📋 (Pendiente)
+**Nombre:** Calibraciones Finales + Optimización
+**Objetivo:** Sistema completamente optimizado
 **Duración estimada:** 4-6 horas
 
 **Pasos:**
-1. Pressure Advance tuning
-2. Retraction tuning
-3. Flow rate calibration
-4. Temperature tower (PLA, PETG, ABS)
-5. Bed mesh refinado (7×7 o 9×9)
-6. Z offset fine-tuning
-7. First layer calibration
-8. Linear advance (si procede)
-9. Macros personalizadas (START_PRINT, END_PRINT)
-10. Test prints completos
+1. Pressure Advance tuning fino
+2. Retraction tuning avanzado
+3. Flow rate calibration por material
+4. Bed mesh refinado (7×7 o 9×9)
+5. Z offset fine-tuning
+6. Sensorless homing optimization
+7. Temperature towers múltiples materiales
+8. Macros avanzadas (limpieza nozzle, purge, etc.)
+9. Test prints de calidad (benchy, torture test)
+10. Documentación parámetros finales
 
-**Resultado:** Impresora optimizada, lista para producción
+**Resultado:** Impresora completamente calibrada y optimizada
 
-### PHASE 12 📋 (Futuro)
-**Nombre:** Upgrades "PRO" (opcional)
-**Objetivo:** Hardware premium
+### PHASE 8 📋 (Futuro - Opcional)
+**Nombre:** Upgrades "PRO"
+**Objetivo:** Hardware premium y mejoras opcionales
 
 **Posibles mejoras:**
-- Fleje PEI magnético
-- Extrusor Orbiter v2 o similar
-- Hotend de alta temperatura (Dragon, Rapido)
+- Fleje PEI magnético (mejor adherencia)
+- Extrusor Orbiter v2 (más ligero, mejor retracción)
+- Hotend alta temperatura Dragon/Rapido (250°C+)
 - Ventiladores Noctua (silenciosos)
-- Neopixels / iluminación
-- Cámara con timelapse
-- Sensores de filamento
+- Neopixels/LED strips (iluminación)
+- Cámara + timelapse (Crowsnest/Mainsail)
+- Sensores filamento (runout detection)
+- Cable chains mejoradas
+- Drag chain para cables
 
-**Criterio:** Solo después de estabilidad completa
+**Criterio:** Solo después de estabilidad completa (Phase 7 terminada)
 
 ---
 
 ## MATRIZ DE DEPENDENCIAS
 
-| Fase | Depende de | Bloquea a | Reversible |
-|------|------------|-----------|------------|
-| 0 | - | 1 | ✅ |
-| 1 | 0 | 2 | ✅ |
-| 2 | 1 | 3 | ⚠️ Requiere desconexión completa |
-| 3 | 2 | 4 | ✅ |
-| 4 | 3 | 5 | ✅ |
-| 5 | 4 | 6 | ✅ |
-| 6 | 5 | 7 | ✅ |
-| 7 | 6 | 8 | ⚠️ Requiere desmontaje toolhead |
-| 8 | 7 | 9 | ✅ |
-| 9 | 8 | 10 | ⚠️ Requiere cambio de hotend |
-| 10 | 9 | 11 | ✅ |
-| 11 | 10 | 12 | ✅ |
-| 12 | 11 | - | ✅ |
+| Fase | Depende de | Bloquea a | Reversible | Notas |
+|------|------------|-----------|------------|-------|
+| 0 | - | 1 | ✅ | Documentación |
+| 1 | 0 | 2 | ✅ | SKR preparación |
+| 2 | 1 | 3 | ⚠️ | Requiere desconexión stock completa |
+| 3 | 2 | 4 | ⚠️ | Montaje EBB42, cables stock no reversibles |
+| 4 | 3 | 5 | ✅ | Firmware y configuración |
+| 5 | 4 | 6 | ✅ | Primera impresión |
+| 6 | 5 | 7 | ✅ | Input Shaper (requiere impresora funcional) |
+| 7 | 6 | 8 | ✅ | Calibraciones finales |
+| 8 | 7 | - | ✅ | Upgrades opcionales
 
 ---
 
@@ -322,23 +287,24 @@
 
 ## ESTIMACIÓN TEMPORAL
 
-| Fase | Tiempo mínimo | Tiempo realista | Tiempo máximo |
-|------|---------------|-----------------|---------------|
-| 1 | 2h | 3h | 5h |
-| 2 | 4h | 6h | 10h |
-| 3 | 2h | 3h | 5h |
-| 4 | 2h | 3h | 5h |
-| 5 | 3h | 4h | 6h |
-| 6 | 1h | 2h | 3h |
-| 7 | 3h | 4h | 6h |
-| 8 | 1h | 2h | 3h |
-| 9 | 2h | 3h | 5h |
-| 10 | 2h | 3h | 5h |
-| 11 | 4h | 6h | 10h |
-| 12 | Variable | Variable | Variable |
-| **TOTAL** | **26h** | **39h** | **63h** |
+| Fase | Tiempo estimado | Tiempo real | Estado |
+|------|----------------|-------------|--------|
+| 0 | - | - | ✅ Completada |
+| 1 | 2-3h | 2h | ✅ Completada |
+| 2 | 4-6h | 6h | ✅ Completada |
+| 3 | 4-6h | - | 📋 En curso |
+| 4 | 3-4h | - | 📋 Pendiente |
+| 5 | 3-4h | - | 📋 Pendiente |
+| 6 | 2-3h | - | 📋 Pendiente |
+| 7 | 4-6h | - | 📋 Pendiente |
+| 8 | Variable | - | 📋 Opcional |
+| **TOTAL (1-7)** | **22-32h** | **8h completadas** | **14-24h restantes** |
 
-**Recomendación:** Planificar 5-7 días de trabajo con sesiones de 4-6 horas, permitiendo descansos y troubleshooting.
+**Tiempo invertido:** 8 horas (Phases 1-2)
+**Tiempo restante estimado:** 14-24 horas (Phases 3-7)
+**Total proyecto:** 22-32 horas hasta impresora completamente calibrada
+
+**Recomendación:** Planificar 4-6 días adicionales con sesiones de 3-5 horas, permitiendo descansos y troubleshooting.
 
 ---
 
@@ -403,6 +369,14 @@
 
 ---
 
-**Última actualización:** 2025-12-20
-**Versión:** 1.0
-**Próxima revisión:** Después de completar Phase 1
+**Última actualización:** 2025-12-21
+**Versión:** 2.0 (actualizado tras completar Phase 2)
+**Próxima revisión:** Después de completar Phase 3 (EBB42 CAN)
+
+**Cambios v2.0:**
+- Corregido: Dual Z (2 motores, no 1)
+- Actualizado: Arquitectura EBB42 CAN desde inicio (no toolhead stock temporal)
+- Reorganizado: Fases reducidas de 12 a 8 (más coherente)
+- Actualizado: Sensorless homing X/Y (sin endstops físicos)
+- Eliminado: Phase DC-DC converter (innecesario, PSU ya da 24V estable)
+- Fusionado: PT100 + extrusor + probe en Phase 3 (todo en EBB42 de una vez)
