@@ -333,6 +333,6 @@ O si ya completaste el Step 1:
 
 ---
 
-**Última actualización:** 2025-12-20
-**Versión:** 1.0
+**Última actualización:** 2025-12-21
+**Versión:** 1.1
 **Estado:** En construcción activa
