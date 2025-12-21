@@ -383,19 +383,39 @@ Si se aprueba USB, Phase 3 cambiará a:
 
 ---
 
-## ✅ Acción Requerida
+## ✅ DECISIÓN TOMADA
 
-**Decisión del usuario:**
+**Modo seleccionado:** ✅ **USB**
 
-- [ ] ✅ **APROBAR USB** - Continuar Phase 3 con modo USB
-- [ ] ❌ **PREFERIR CAN** - Continuar Phase 3 con modo CAN bus
-- [ ] ❓ **MÁS INFO** - Necesito más detalles sobre [especificar]
+**Fecha decisión:** 2025-12-21
 
-**Justificación usuario (opcional):**
-_____________________________________
+**Justificación:**
+1. **Objetivo "semi-Voron"** - Voron Design usa USB para toolhead boards
+2. **Comunidad más grande** - Más recursos y soporte actual
+3. **Material disponible** - Switch USB, cables USB disponibles
+4. **Simplicidad** - Primera impresora Klipper, mejor empezar simple
+5. **Setup existente** - MiniPC Debian con Klipper ya configurado
+
+**Arquitectura final:**
+```
+MiniPC (Debian + Klipper)
+├─ USB → SKR 1.4 Turbo (MCU principal)
+└─ USB → EBB42 Toolhead (MCU toolhead)
+
+Toolhead cables:
+├─ USB (comunicación al miniPC)
+└─ 24V + GND (alimentación desde SKR)
+```
+
+**Material USB disponible:**
+- Switch USB
+- Cable alargador USB
+- Cable corto USB
+- (Verificar inventario completo en siguiente documento)
 
 ---
 
 **Documento creado:** 2025-12-21
-**Próxima actualización:** Tras decisión del usuario
-**Impacto:** Actualizar `PLANNING.md` según decisión
+**Decisión tomada:** 2025-12-21
+**Próximo paso:** Inventario material Phase 3 modo USB
+**Impacto:** Actualizar `PLANNING.md` con arquitectura USB
