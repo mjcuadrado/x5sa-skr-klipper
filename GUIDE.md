@@ -84,29 +84,51 @@ Cada guía de paso incluye:
 **Estado:** Completada
 **Objetivo:** Documentar estado inicial
 
-### Phase 1: SKR 1.4 Turbo - Preparación 🔄
-**Estado:** En curso
+### Phase 1: SKR 1.4 Turbo - Preparación ✅
+**Estado:** Completada (2025-12-20)
 **Objetivo:** Placa con drivers, sin cablear
-**Tiempo estimado:** 2-3 horas
+**Tiempo real:** 2 horas
 
 **Pasos:**
-1. [SKR stock sin tocar](guides/phase1/step1_skr_stock.md)
-2. [Configuración jumpers UART](guides/phase1/step2_uart_jumpers.md) ⬅️ **SIGUIENTE**
-3. [Orientación drivers TMC2209](guides/phase1/step3_driver_orientation.md)
-4. [Instalación física drivers](guides/phase1/step4_driver_installation.md)
-5. [Verificación visual final](guides/phase1/step5_verification.md)
+1. [SKR stock sin tocar](guides/phase1/step1_skr_stock.md) ✅
+2. [Configuración jumpers UART](guides/phase1/step2_uart_jumpers.md) ✅
+3. [Orientación drivers TMC2209](guides/phase1/step3_driver_orientation.md) ✅
+4. [Instalación física drivers](guides/phase1/step4_driver_installation.md) ✅
+5. [Verificación visual final](guides/phase1/step5_verification.md) ✅
 
-### Phase 2: Cableado Básico 📋
+### Phase 2: SKR Cableado Básico ✅
+**Estado:** Completada (2025-12-21)
+**Objetivo:** SKR montada y cableada (motores, cama, alimentación)
+**Tiempo real:** 6 horas
+
+**Decisión arquitectónica:** SKR montada en posición superior + EBB42 CAN desde inicio
+
+**Pasos:**
+1. [Documentación wiring stock](guides/phase2/step1_documentation.md) ✅
+2. [Desconexión electrónica stock](guides/phase2/step2_stock_disconnection.md) ✅
+3. [Montaje SKR posición superior](guides/phase2/step3_skr_mounting.md) ✅
+4. [Cableado básico SKR](guides/phase2/step4_skr_basic_wiring.md) ✅
+5. [Verificación final Phase 2](guides/phase2/step5_verification.md) ✅
+
+**Logros:**
+- 36 fotos documentadas
+- Cable extensión Motor Z2 fabricado (JST-XH 4-pin, 60cm)
+- Cable extensión 24V (50cm, termorretráctil rojo/azul)
+- Sensorless homing X/Y (TMC2209)
+
+### Phase 3: Toolhead EBB42 CAN 📋
 **Estado:** Pendiente
-**Objetivo:** Motores + endstops + alimentación
-**Tiempo estimado:** 4-6 horas
+**Objetivo:** Toolhead con comunicación CAN bus
+**Tiempo estimado:** 4-6 horas ⬅️ **SIGUIENTE**
 
-*(Se completará cuando se inicie)*
-
-### Phase 3: Firmware Klipper 📋
-**Estado:** Pendiente
-**Objetivo:** Klipper corriendo, movimientos básicos
-**Tiempo estimado:** 2-3 horas
+**Componentes a integrar:**
+- Instalación EBB42 V1.2 en toolhead
+- Motor extrusor (E0) → EBB42
+- Calentador + termistor hotend → EBB42
+- Ventiladores → EBB42
+- Sensor Omron TL-Q5MC1-Z → EBB42
+- Cable CAN 4 hilos (Cat6 + alimentación separada)
+- Configuración CAN bus
 
 ### Phase 4: Cama + Sensor Inductivo 📋
 **Estado:** Pendiente
