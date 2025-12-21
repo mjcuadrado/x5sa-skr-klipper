@@ -210,7 +210,7 @@ Documentación fotográfica del toolhead stock:
 | Material USB (genérico) | ✅ Disponible | **Identificar cable específico** |
 | Cable USB toolhead | ⚠️ Verificar | **Medir longitud necesaria** |
 | Cable 24V toolhead | ⚠️ Verificar | **Verificar sección y longitud** |
-| Ventiladores | ⚠️ Decidir | **Stock vs upgrade** |
+| Ventiladores stock | ✅ Usar stock | **Verificar voltaje y funcionamiento** |
 | Tornillería | ⚠️ Verificar | **Medir puntos montaje** |
 | Toolhead stock | 📋 Pendiente | **DOCUMENTAR CON FOTOS** |
 
