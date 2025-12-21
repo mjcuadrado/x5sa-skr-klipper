@@ -118,14 +118,127 @@ Cuando tengas las fotos:
 
 ---
 
+## 📸 Fotos de Referencia - Sistema Stock Documentado
+
+### Compartimento Inferior - Vista General
+
+![Vista general del compartimento de electrónica](../../photos/phase2/01_compartment_general.jpg)
+*Compartimento inferior con placa controladora stock y PSU P360W24V. Sistema dual-board con ribbon cable de distribución visible.*
+
+![Placa controladora stock - Vista superior](../../photos/phase2/02_board_top_view.jpg)
+*Placa principal stock vista desde arriba. Se observan conectores de motores, terminales de potencia y salida del ribbon cable.*
+
+![Salida del ribbon cable](../../photos/phase2/03_ribbon_cable_exit.jpg)
+*Punto de salida del ribbon cable plano negro desde la placa principal, conectando con la subplaca de distribución superior.*
+
+![Detalle de conectores placa stock](../../photos/phase2/04_connectors_detail.jpg)
+*Acercamiento a la zona de conectores de la placa stock: motores, alimentación y ribbon cable.*
+
+![Ruteo del ribbon cable y placa](../../photos/phase2/05_board_ribbon_routing.jpg)
+*Vista del recorrido del ribbon cable desde la placa principal hacia arriba del frame.*
+
+![Vista inferior placa - drivers](../../photos/phase2/06_board_bottom_drivers.jpg)
+*Parte inferior de la placa stock mostrando drivers de motores integrados.*
+
+![Terminal de alimentación placa stock](../../photos/phase2/07_board_power_terminal.jpg)
+*Terminal de alimentación de la placa stock con cables de la PSU conectados.*
+
+### Sistema Dual-Board
+
+![Sistema dual-board completo](../../photos/phase2/08_dual_board_system.jpg)
+*Arquitectura de dos placas: placa principal inferior + subplaca de distribución superior conectadas por ribbon cable.*
+
+![Conectores sistema dual-board](../../photos/phase2/09_dual_board_connectors.jpg)
+*Detalle de conectores en ambas placas del sistema dual-board.*
+
+![Etiquetado de endstops](../../photos/phase2/10_endstop_labeling_detail.jpg)
+*Detalle de etiquetas de endstops en la placa de distribución (X, Y, Z).*
+
+### Fuente de Alimentación (PSU)
+
+![Especificaciones PSU](../../photos/phase2/11_psu_label_specs.jpg)
+*Etiqueta de la fuente P360W24V: 24V 15A, 360W máximo.*
+
+![PSU vista lateral](../../photos/phase2/12_psu_side_view.jpg)
+*Vista lateral de la PSU montada en el compartimento inferior.*
+
+![Conexiones DC de salida PSU](../../photos/phase2/13_psu_dc_output_connections.jpg)
+*Terminales DC de salida de la PSU (+24V y GND) con cables conectados.*
+
+![Etiqueta de precaución PSU](../../photos/phase2/14_psu_caution_label.jpg)
+*Etiqueta de advertencia de la PSU con especificaciones de seguridad.*
+
+![Detalle terminales DC PSU](../../photos/phase2/15_psu_dc_terminals_detail.jpg)
+*Acercamiento a los terminales de salida DC de la PSU (+24V, GND).*
+
+### Caja de Distribución Superior
+
+![Llegada ribbon cable a distribución](../../photos/phase2/16_distribution_box_ribbon_arrival.jpg)
+*Ribbon cable llegando a la caja de distribución en la parte superior del frame.*
+
+![Detalle cables distribución](../../photos/phase2/17_distribution_box_cables_detail.jpg)
+*Cables distribuidos desde la caja hacia motores y sensores.*
+
+![Caja distribución exterior](../../photos/phase2/18_distribution_box_external.jpg)
+*Vista exterior de la caja de distribución superior.*
+
+![PCB interior distribución](../../photos/phase2/19_distribution_box_interior_pcb.jpg)
+*Interior de la caja mostrando la subplaca PCB de distribución.*
+
+![Conectores detalle distribución](../../photos/phase2/20_distribution_box_connectors_detail.jpg)
+*Detalle de conectores en la subplaca de distribución.*
+
+### Motores CoreXY (X/Y)
+
+![Motores CoreXY superiores](../../photos/phase2/21_motors_corexy_xy.jpg)
+*Motores X e Y del sistema CoreXY montados en la parte superior del frame.*
+
+![Detalle motores CoreXY](../../photos/phase2/22_motors_corexy_detail.jpg)
+*Acercamiento a los motores CoreXY con sus cables y poleas de correas.*
+
+### Motores Z (Leadscrews)
+
+![Motor Z1 con leadscrew](../../photos/phase2/23_motor_z1_leadscrew.jpg)
+*Motor Z1 (leadscrew izquierdo) con acoplamiento al tornillo trapezoidal.*
+
+![Motor Z2 con leadscrew](../../photos/phase2/24_motor_z2_leadscrew.jpg)
+*Motor Z2 (leadscrew derecho) con acoplamiento al tornillo trapezoidal.*
+
+![Motor Y etiquetado](../../photos/phase2/25_motor_y_labeled.jpg)
+*Motor Y del sistema CoreXY con etiqueta de identificación.*
+
+### Cama Caliente (Heated Bed)
+
+![Vista general cama y eje Z](../../photos/phase2/26_general_view_bed_z.jpg)
+*Vista general de la cama caliente y sistema de elevación Z con dual leadscrew.*
+
+![Cama caliente y motor Z](../../photos/phase2/27_heated_bed_motor_z.jpg)
+*Detalle de la cama caliente montada sobre el sistema Z.*
+
+![Cables de potencia cama](../../photos/phase2/28_heated_bed_power_cables.jpg)
+*Cables de alimentación de la cama caliente (cables gruesos de potencia).*
+
+![Cables etiquetados cama](../../photos/phase2/29_heated_bed_labeled_cables.jpg)
+*Cables de la cama caliente con etiquetas: alimentación y termistor.*
+
+### Extrusor/Hotend
+
+![Extrusor y hotend completo](../../photos/phase2/30_extruder_hotend_complete.jpg)
+*Vista completa del extrusor y hotend stock con todos sus componentes.*
+
+![Ventilador extrusor/hotend](../../photos/phase2/31_extruder_hotend_fan.jpg)
+*Detalle del ventilador del hotend y sistema de enfriamiento.*
+
+---
+
 ## ➡️ Siguiente Paso
 
 Una vez validadas todas las fotos:
 
-**[Step 2: Identificación y Etiquetado de Cables](step2_labeling.md)**
+**[Step 2: Desconexión Electrónica Stock](step2_stock_disconnection.md)**
 
 ---
 
 **Estado:** ✅ Completado (2025-12-20)
-**Fotos documentadas:** 31 fotos completas del sistema
+**Fotos documentadas:** 31 fotos completas del sistema stock
 **Arquitectura identificada:** Dual-board system + subplaca distribución
