@@ -2,7 +2,7 @@
 
 **Objetivo:** Preparar la placa SKR 1.4 Turbo con drivers TMC2209 en modo UART, sin cablear ni alimentar nada.
 
-**Estado:** En progreso
+**Estado:** ✅ Completada (2025-12-20)
 
 ---
 
