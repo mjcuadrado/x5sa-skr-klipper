@@ -28,21 +28,15 @@ Se completó la instalación del hardware stock del toolhead en la configuració
 │  │              │           │ TH0     ← Therm   │ ←──
 │  │              │           │ FAN1    ← HE fan  │ ←──
 │  │              │           │ FAN2    ← Part fan│ ←──
-│  │              │           │ PA5     ← Tronxy  │ ←── Signal
-│  │              │           │           Signal  │
+│  │              │           │ I2C     ← Eddy    │ (PB3/PB4)
+│  │              │           │           Coil    │
 │  └──────────────┘           └───────────────────┘
 │  24V desde PSU               24V desde PSU
 └────────────────────────────────────────────────────────┘
-                                                     ↓
-                                      Cable sensor Tronxy
-                                                     ↓
-                                            ┌────────────┐
-                                            │ TOOLHEAD   │
-                                            │ (stock)    │
-                                            │            │
-                                            │ Tronxy     │
-                                            │ XY-08N     │
-                                            └────────────┘
+
+         ⚠️ NOTA: Diagrama original documentaba sensor Tronxy XY-08N
+         (abandonado). Ver sección "ACTUALIZACIÓN: Migración a Eddy Coil"
+         para configuración actual.
 ```
 
 ---
@@ -53,18 +47,19 @@ Se completó la instalación del hardware stock del toolhead en la configuració
 
 | Componente | Cable | Conector EBB42 | Estado |
 |------------|-------|----------------|--------|
-| **Heater hotend** | Blanco con rayas grises | Terminales tornillo HE | ✅ Conectado |
-| **Thermistor** | Blanco delgado | TH0 (2-pin JST) | ✅ Conectado |
-| **Ventilador hotend** | Negro/Rojo | FAN1 (PA0) | ✅ Conectado |
-| **Ventilador part cooling** | Negro/Azul | FAN2 (PA1) | ✅ Conectado |
-| **Sensor Tronxy (signal)** | Negro | PA5 (PROBE) | ✅ Conectado |
+| **Heater hotend** | Blanco con rayas grises | Terminales tornillo HE (PB13) | ✅ Conectado |
+| **Thermistor** | Blanco delgado | TH0 (PA3) | ✅ Conectado |
+| **Ventilador hotend** | Negro/Rojo | FAN1 (PA1) | ✅ Conectado |
+| **Ventilador part cooling** | Negro/Azul | FAN2 (PA0) | ✅ Conectado |
+| **Eddy Coil V1.0** | Cable I2C 4-pin | I2C (PB3/PB4) | ✅ Conectado |
+| ~~Sensor Tronxy~~ | ~~Negro~~ | ~~PA5~~ | ❌ Abandonado |
 
 ### En SKR 1.4 Turbo:
 
 | Componente | Cable | Conector SKR | Estado |
 |------------|-------|--------------|--------|
-| **Sensor Tronxy +24V** | Marrón | FAN0 VIN | ✅ Conectado |
-| **Sensor Tronxy GND** | Azul | FAN0 GND | ✅ Conectado |
+| ~~Sensor Tronxy +24V~~ | ~~Marrón~~ | ~~FAN0 VIN~~ | ❌ Removido |
+| ~~Sensor Tronxy GND~~ | ~~Azul~~ | ~~FAN0 GND~~ | ❌ Removido |
 | **USB a EBB42** | USB-C | Puerto USB | ✅ Conectado |
 
 ### Alimentación:
@@ -76,9 +71,12 @@ Se completó la instalación del hardware stock del toolhead en la configuració
 
 ---
 
-## 🔧 Sensor Tronxy XY-08N
+## 🔧 ~~Sensor Tronxy XY-08N~~ (DEPRECADO - Solo Histórico)
 
-### Especificaciones:
+⚠️ **NOTA:** Esta sección documenta el sensor XY-08N que fue **abandonado** por incompatibilidad eléctrica.
+Ver sección **"ACTUALIZACIÓN: Migración a Eddy Coil V1.0"** más abajo para configuración actual.
+
+### Especificaciones (referencia histórica):
 - **Modelo:** Tronxy XY-08N
 - **Tipo:** Sensor inductivo NPN NO (Normally Open)
 - **Voltaje:** 6-36V DC
@@ -117,8 +115,8 @@ pin: ^EBBCan:PA5  # Pullup habilitado para NPN NO
 - `07_skr_ebb42_frame_superior.jpeg` - SKR y EBB42 montadas juntas
 - `08_skr_ebb42_wiring_detail.jpeg` - Detalle del cableado entre placas
 
-**Sensor:**
-- `09_tronxy_xy08n_sensor_blue.jpeg` - Sensor Tronxy XY-08N azul montado
+**Sensor (histórico):**
+- `09_tronxy_xy08n_sensor_blue.jpeg` - ~~Sensor Tronxy XY-08N~~ (abandonado, solo referencia histórica)
 
 ---
 
@@ -141,7 +139,7 @@ step_pin: P2.0
 dir_pin: !P0.5
 enable_pin: !P2.1
 # Heater y thermistor en EBB42
-heater_pin: EBBCan:PA2
+heater_pin: EBBCan:PB13    # EBB42 V1.2 heater output
 sensor_pin: EBBCan:PA3
 ```
 
@@ -157,13 +155,15 @@ pin: EBBCan:PA1
 heater_temp: 50.0
 ```
 
-**Probe:**
+**Probe (configuración histórica - DEPRECADA):**
 ```ini
-[probe]
+# ⚠️ OBSOLETO - Sensor XY-08N abandonado
+# Ver sección "ACTUALIZACIÓN: Migración a Eddy Coil V1.0" para config actual
+#[probe]
 # Tronxy XY-08N NPN NO
 # Alimentación desde SKR FAN0
 # Signal a EBB42 PA5
-pin: ^EBBCan:PA5
+#pin: ^EBBCan:PA5
 ```
 
 ---

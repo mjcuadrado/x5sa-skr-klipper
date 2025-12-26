@@ -408,7 +408,7 @@ step_pin: P2.0
 dir_pin: !P0.5
 enable_pin: !P2.1
 # Heater en EBB42
-heater_pin: EBBCan:PA2
+heater_pin: EBBCan:PB13    # EBB42 V1.2 heater output (V1.0 usaba PA2)
 # Thermistor en EBB42
 sensor_pin: EBBCan:PA3
 ```

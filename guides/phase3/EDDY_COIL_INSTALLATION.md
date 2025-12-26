@@ -245,6 +245,16 @@ Si tienes multímetro, puedes verificar:
    - **Si lee 0V:** revisar conexión
    - **Si lee >5.5V:** ¡APAGAR! Hay problema de alimentación
 
+⚠️ **ADVERTENCIA CRÍTICA - Ground Loops:**
+
+**NUNCA** mezcles grounds entre SKR y EBB42 de forma incorrecta. Este proyecto experimentó un **fallo completo de SKR** por conectar incorrectamente grounds entre placas.
+
+**Regla de oro:**
+- ✅ **CORRECTO:** Eddy Coil alimentado 100% desde EBB42 (VCC + GND + I2C)
+- ❌ **INCORRECTO:** VCC desde una placa, GND desde otra
+
+**Lección aprendida:** Ver documentación completa del incidente en [HARDWARE_EVOLUTION.md](../../HARDWARE_EVOLUTION.md) sección "Incidentes Críticos - Fallo SKR 1.4 Turbo #1".
+
 ---
 
 ## 6. Verificación de Hardware

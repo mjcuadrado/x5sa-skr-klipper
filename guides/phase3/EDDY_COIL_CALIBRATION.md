@@ -182,6 +182,22 @@ El **Z offset** define la altura del nozzle cuando el sensor detecta el bed. Es 
 - Adhesión del filamento
 - Evitar daños al nozzle/bed
 
+### ⚠️ CHECKLIST DE SEGURIDAD PRE-CALIBRACIÓN
+
+**ANTES de ejecutar cualquier G28 o comando de calibración, VERIFICA:**
+
+- [ ] ✅ **Eddy Coil responde:** `QUERY_PROBE` muestra "open" en el aire
+- [ ] ✅ **Eddy Coil detecta metal:** Acercar metal → `QUERY_PROBE` muestra "TRIGGERED"
+- [ ] ✅ **Nozzle limpio:** Sin filamento o residuos
+- [ ] ✅ **Bed limpio:** Superficie libre de objetos
+- [ ] ✅ **Mano en emergency stop:** Listo para detener si algo falla
+- [ ] ✅ **Z offset inicial razonable:** `z_offset: 1.0` (o similar) en printer.cfg
+- [ ] ✅ **Iluminación adecuada:** Puedes ver nozzle y bed claramente
+
+**Si algún check falla:** NO continuar. Revisar [EDDY_COIL_INSTALLATION.md](EDDY_COIL_INSTALLATION.md) sección Troubleshooting.
+
+---
+
 ### 4.1 Método automático (recomendado)
 
 Puedes usar el **macro simplificado** incluido en `printer.cfg`:
