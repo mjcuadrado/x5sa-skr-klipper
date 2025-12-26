@@ -1,7 +1,7 @@
 # Phase 3 - Instalación Completada
 
-**Fecha:** 2025-12-21
-**Estado:** ✅ Hardware conectado - Listo para testing
+**Fecha:** 2025-12-21 (instalación inicial) | 2025-12-26 (upgrade Eddy Coil)
+**Estado:** ✅ Hardware actualizado - Eddy Coil V1.0 operativo
 
 ---
 
@@ -287,18 +287,182 @@ Antes de energizar, verificar:
 
 ---
 
+## ⚡ ACTUALIZACIÓN: Migración a Eddy Coil V1.0 (2025-12-26)
+
+### ❌ Problema con Tronxy XY-08N
+
+El sensor Tronxy XY-08N inicialmente documentado **NO se pudo implementar** debido a incompatibilidades eléctricas:
+
+**Problemas identificados:**
+1. **Voltaje de salida incompatible:** Sensor outputs 24V cuando triggered, MCUs requieren 3.3V
+2. **Pullup interno a 24V:** Sensor tiene pullup interno que no permite adaptación simple con BAT85
+3. **Circuito complejo requerido:** Necesitaría circuito activo (transistor + resistencias) para level shifting
+4. **Tiempo perdido:** 2+ días intentando múltiples configuraciones sin éxito
+
+**Intentos realizados (todos fallidos):**
+- BAT85 diode solo → LED no enciende, sensor no funciona
+- Resistencias en serie (68kΩ) → Insuficiente corriente
+- Múltiples pines probados: SKR (P0.10, P1.25, P1.26, P1.27) + EBB42 (PA5, PB8, PB9)
+- Alimentación híbrida SKR FAN0 + signal a EBB42
+
+**Conclusión:** Sensor inadecuado para MCUs de 3.3V sin circuito adaptador complejo.
+
+### ✅ Solución: BIGTREETECH Eddy Coil V1.0
+
+**Fecha de implementación:** 2025-12-26
+
+Se decidió reemplazar el Tronxy XY-08N por **BIGTREETECH Eddy Coil V1.0**, un sensor de corrientes de Eddy (eddy current) diseñado específicamente para Klipper.
+
+**Ventajas del Eddy Coil:**
+- ✅ **Comunicación I2C nativa** - Sin adaptaciones de voltaje
+- ✅ **Alimentación 3.3V/5V** - Directa desde EBB42
+- ✅ **Mayor precisión** - ±0.01mm vs ±0.1mm del inductivo
+- ✅ **Calibración automática** - Klipper maneja todo vía comandos
+- ✅ **Sin circuitos externos** - Conexión directa a puerto I2C
+- ✅ **Soporte oficial Klipper** - Documentación completa
+
+**Hardware instalado:**
+- Modelo: BIGTREETECH Eddy Coil V1.0
+- Chip: LDC1612 (Texas Instruments)
+- Conexión: I2C a EBB42 V1.2
+- Pines: SCL=PB3, SDA=PB4
+- I2C address: 42 (decimal)
+
+### 🔧 Configuración Actual (Eddy Coil)
+
+**Hardware conectado en EBB42 (actualizado):**
+
+| Componente | Cable | Conector EBB42 | Estado |
+|------------|-------|----------------|--------|
+| **Heater hotend** | Blanco con rayas grises | Terminales tornillo HE | ✅ Conectado |
+| **Thermistor** | Blanco delgado | TH0 (2-pin JST) | ✅ Conectado |
+| **Ventilador hotend** | Negro/Rojo | FAN1 (PA0) | ✅ Conectado |
+| **Ventilador part cooling** | Negro/Azul | FAN2 (PA1) | ✅ Conectado |
+| **Eddy Coil V1.0** | Cable I2C 4-pin | I2C (PB3/PB4) | ✅ Conectado |
+| ~~Sensor Tronxy (signal)~~ | ~~Negro~~ | ~~PA5 (PROBE)~~ | ❌ REMOVIDO |
+
+**En SKR 1.4 Turbo (actualizado):**
+
+| Componente | Cable | Conector SKR | Estado |
+|------------|-------|--------------|--------|
+| ~~Sensor Tronxy +24V~~ | ~~Marrón~~ | ~~FAN0 VIN~~ | ❌ REMOVIDO |
+| ~~Sensor Tronxy GND~~ | ~~Azul~~ | ~~FAN0 GND~~ | ❌ REMOVIDO |
+| **USB a EBB42** | USB-C | Puerto USB | ✅ Conectado |
+
+### 📐 Cableado Eddy Coil I2C
+
+```
+BIGTREETECH Eddy Coil V1.0 → EBB42 V1.2
+
+Cable I2C (4 hilos):
+├─ Pin 1 (GND)      →  EBB42 I2C: Pin 1 (GND)
+├─ Pin 2 (VCC)      →  EBB42 I2C: Pin 2 (VCC 3.3V/5V)
+├─ Pin 3 (SDA/PB4)  →  EBB42 I2C: Pin 3 (SDA)
+└─ Pin 4 (SCL/PB3)  →  EBB42 I2C: Pin 4 (SCL)
+```
+
+### ⚙️ Configuración Klipper (Eddy Coil)
+
+**Sección actualizada en `printer.cfg`:**
+
+```ini
+[probe_eddy_current btt_eddy]
+sensor_type: ldc1612
+i2c_mcu: EBBCan
+i2c_address: 42
+i2c_speed: 400000
+i2c_software_scl_pin: EBBCan:PB3
+i2c_software_sda_pin: EBBCan:PB4
+x_offset: 0.0
+y_offset: 0.0
+z_offset: 1.0              # Calibrado con PROBE_EDDY_CURRENT_CALIBRATE
+speed: 5.0
+lift_speed: 10.0
+samples: 2
+samples_result: average
+sample_retract_dist: 2.0
+samples_tolerance: 0.050
+samples_tolerance_retries: 3
+```
+
+**Comandos de calibración:**
+
+```gcode
+# 1. Calibrar drive current (solo primera vez)
+LDC_CALIBRATE_DRIVE_CURRENT CHIP=btt_eddy
+
+# 2. Calibrar Z offset
+PROBE_EDDY_CURRENT_CALIBRATE CHIP=btt_eddy
+
+# 3. Guardar configuración
+SAVE_CONFIG
+```
+
+### 📖 Documentación Eddy Coil
+
+Guías detalladas creadas:
+- **[EDDY_COIL_INSTALLATION.md](EDDY_COIL_INSTALLATION.md)** - Instalación física completa
+- **[EDDY_COIL_CALIBRATION.md](EDDY_COIL_CALIBRATION.md)** - Calibración y uso
+
+### 🔄 Diferencias vs Tronxy XY-08N
+
+| Aspecto | Tronxy XY-08N (Abandonado) | Eddy Coil V1.0 (Actual) |
+|---------|----------------------------|-------------------------|
+| **Alimentación** | 24V (requiere SKR FAN0) | 3.3V/5V (directo desde EBB42) |
+| **Señal** | Digital ON/OFF en 24V | Analógica I2C |
+| **Cableado** | Híbrido (SKR + EBB42) | Solo EBB42 (I2C) |
+| **Configuración** | `[probe]` con pullup | `[probe_eddy_current]` |
+| **Calibración** | Manual (resistencias) | Automática (Klipper) |
+| **Precisión** | ±0.1mm | ±0.01mm |
+| **Compatibilidad** | Requiere adaptación | Nativa Klipper |
+| **Estado** | ❌ NO funcional | ✅ Operativo |
+
+### 🎯 Estado Actual del Sistema
+
+**Hardware operativo:**
+- ✅ SKR 1.4 Turbo (nueva placa, reflashed)
+- ✅ EBB42 CAN V1.2 (USB mode)
+- ✅ Heater + Thermistor en EBB42
+- ✅ Fans (hotend + part cooling) en EBB42
+- ✅ **Eddy Coil V1.0 calibrado y funcionando**
+- ✅ TMC2209 drivers (5×) operativos
+
+**Git commits relevantes:**
+- `42f69d3` - Última configuración estable antes de probe (heater funcionando)
+- `b9eefb5` - Implementación Eddy Coil V1.0 (2025-12-26)
+
+**Próximos pasos:**
+1. Instalación física del Eddy Coil en toolhead
+2. Calibración drive current y Z offset
+3. Testing de homing G28
+4. Bed mesh leveling
+5. Primera impresión de prueba
+
+---
+
 ## 🔗 Referencias
 
+### Documentación Original (Phase 3):
 - **Guía de Implementación Temporal:** [IMPLEMENTACION_TEMPORAL.md](IMPLEMENTACION_TEMPORAL.md)
 - **Flasheo SKR Exitoso:** [FLASHEO_SKR_EXITOSO.md](FLASHEO_SKR_EXITOSO.md)
 - **Flasheo EBB42 Exitoso:** [FLASHEO_EBB42_EXITOSO.md](FLASHEO_EBB42_EXITOSO.md)
 - **Configuración Dual-MCU:** [CONFIGURACION_DUAL_MCU.md](CONFIGURACION_DUAL_MCU.md)
 - **Pinout EBB42:** Diagrama oficial BTT
-- **Sensor Tronxy XY-08N:** Datasheet NPN NO 6-36V
+
+### Documentación Eddy Coil (2025-12-26):
+- **Instalación Eddy Coil:** [EDDY_COIL_INSTALLATION.md](EDDY_COIL_INSTALLATION.md)
+- **Calibración Eddy Coil:** [EDDY_COIL_CALIBRATION.md](EDDY_COIL_CALIBRATION.md)
+- **Klipper Eddy Probe Docs:** https://www.klipper3d.org/Eddy_Probe.html
+- **BTT Eddy GitHub:** https://github.com/bigtreetech/Eddy
+
+### Referencias de Hardware:
+- ~~Sensor Tronxy XY-08N: Datasheet NPN NO 6-36V~~ (abandonado)
+- **BIGTREETECH Eddy Coil V1.0:** LDC1612 sensor, I2C interface
 
 ---
 
 **Preparado por:** mjcuadrado + Claude Code
-**Fecha:** 2025-12-21
-**Versión:** 1.0
-**Estado:** ✅ Instalación hardware completada - Listo para testing
+**Fecha inicial:** 2025-12-21 (instalación EBB42)
+**Última actualización:** 2025-12-26 (migración Eddy Coil)
+**Versión:** 2.0
+**Estado:** ✅ Hardware actualizado con Eddy Coil V1.0 - Listo para calibración

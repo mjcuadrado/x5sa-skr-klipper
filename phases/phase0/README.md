@@ -50,7 +50,7 @@ Visible elements:
 - Endstop connectors
 - Z probe wiring
 
-![Stock board – power and endstops](../../photos/phase0/2025-12-20_stock_board_power_endstops.jpg)g`
+![Stock board – power and endstops](../../photos/phase0/2025-12-20_stock_board_power_endstops.jpg)
 
 ---
 

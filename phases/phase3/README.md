@@ -2,7 +2,20 @@
 
 **Objetivo:** Instalar placa EBB42 en el toolhead y conectar todos los componentes del extrusor/hotend. Establecer comunicación USB con SKR 1.4 Turbo.
 
-**Estado:** ✅ Decisiones tomadas - Listo para implementación (2025-12-21)
+**Estado:** ✅ Hardware instalado y actualizado (2025-12-26)
+
+---
+
+## ⚡ ACTUALIZACIÓN IMPORTANTE (2025-12-26)
+
+El probe sensor **Tronxy XY-08N** documentado inicialmente fue **abandonado** por incompatibilidades eléctricas (voltaje 24V vs 3.3V MCU).
+
+**Probe actual:** **BIGTREETECH Eddy Coil V1.0** (corrientes de Eddy, comunicación I2C)
+
+📗 **Documentación completa:**
+- [EDDY_COIL_INSTALLATION.md](../../guides/phase3/EDDY_COIL_INSTALLATION.md) - Instalación física
+- [EDDY_COIL_CALIBRATION.md](../../guides/phase3/EDDY_COIL_CALIBRATION.md) - Calibración y uso
+- [INSTALACION_COMPLETADA.md](../../guides/phase3/INSTALACION_COMPLETADA.md) - Estado actual completo (v2.0)
 
 ---
 
@@ -147,10 +160,12 @@
 - ✅ FAN0 → Part cooling (controlado PWM)
 - ✅ FAN1 → Hotend fan (always-on T>50°C)
 
-### 6. Probe: Omron NC (Fail-Safe)
-- ✅ Configuración Normally Closed
-- ✅ Fallo del cable = error inmediato, NO imprime
-- ✅ Bed leveling garantizado funcional
+### 6. Probe: ~~Omron NC~~ → **BIGTREETECH Eddy Coil V1.0** (2025-12-26)
+- ❌ ~~Omron TL-Q5MC1-Z~~ (abandonado - incompatibilidad voltaje)
+- ✅ **Eddy Coil V1.0** (LDC1612 sensor - I2C)
+- ✅ Comunicación I2C directa (PB3/PB4 en EBB42)
+- ✅ Precisión ±0.01mm (vs ±0.1mm inductivo)
+- ✅ Calibración automática via Klipper
 
 ### 7. Motor Extrusor
 - ⚠️ Phase 3: Motor E en SKR E0 (lateral - posición actual)
@@ -180,30 +195,29 @@
 
 - [x] Phase 2 completada (SKR cableada)
 - [x] Decisiones de planificación tomadas
-- [ ] Hardware confirmado:
-  - [ ] BTT EBB42 CAN V1.2
-  - [x] Sensor Omron TL-Q5MC1-Z (instalado)
-  - [x] Thermistor NTC 100K stock (usar actual)
-  - [ ] Cable USB-C a USB-C (~2m)
-  - [ ] Cable alimentación 2x1.5mm² (~2m)
-  - [ ] 2x Anillos ferrita
-- [ ] Herramientas: destornilladores, multímetro, crimpadora
-- [ ] Firmware Klipper para EBB42 compilado (USB mode)
+- [x] Hardware confirmado:
+  - [x] BTT EBB42 CAN V1.2 (flasheada ✅)
+  - [x] ~~Sensor Omron TL-Q5MC1-Z~~ → **Eddy Coil V1.0** (instalado ✅)
+  - [x] Thermistor NTC 100K stock (instalado ✅)
+  - [x] Cable USB-C a USB-C (~30cm montaje temporal)
+  - [x] Cable alimentación 24V (~30cm montaje temporal)
+- [x] Herramientas: destornilladores, multímetro, crimpadora
+- [x] Firmware Klipper para EBB42 compilado (USB mode)
 
 ---
 
 ## Objetivo al Finalizar Phase 3
 
-### Hardware a Instalar
+### Hardware Instalado ✅
 
-- [ ] EBB42 montada en toolhead (provisional)
-- [ ] Calentador hotend → EBB42 HE
-- [ ] Thermistor NTC 100K → EBB42 TH0
-- [ ] Ventilador part cooling → EBB42 FAN0
-- [ ] Ventilador hotend → EBB42 FAN1
-- [ ] Sensor Omron → EBB42 PROBE
-- [ ] Cable USB tendido y conectado (SKR ↔ EBB42)
-- [ ] Cable 24V tendido y conectado (SKR ↔ EBB42)
+- [x] EBB42 montada en frame superior junto a SKR (montaje temporal)
+- [x] Calentador hotend → EBB42 HE (PB13)
+- [x] Thermistor NTC 100K → EBB42 TH0 (PA3)
+- [x] Ventilador part cooling → EBB42 FAN (PA0)
+- [x] Ventilador hotend → EBB42 FAN1 (PA1)
+- [x] ~~Sensor Omron → EBB42 PROBE~~ → **Eddy Coil V1.0 → EBB42 I2C (PB3/PB4)**
+- [x] Cable USB-C conectado (SKR ↔ EBB42)
+- [x] Cable 24V conectado (SKR ↔ EBB42)
 
 ### NO Migrado en Phase 3
 - ❌ Motor extrusor → **Se queda en SKR E0** hasta Phase 12
@@ -272,15 +286,15 @@
 
 **Hardware:**
 - [x] BTT EBB42 CAN V1.2 (flasheada ✅)
-- [x] Sensor Omron TL-Q5MC1-Z (instalado)
+- [x] **BIGTREETECH Eddy Coil V1.0** (instalado ✅)
 - [x] Thermistor stock NTC 100K
 - [x] Ventiladores stock (2x)
 
 **Cables (VERSIÓN CORTA - Montaje temporal):**
-- [ ] Cable USB-C a USB-C **~30-50cm** (datos) - SKR ↔ EBB42
-- [ ] Cable 2x1.5mm² para 24V **~30-50cm** - SKR ↔ EBB42
-- [ ] Cable 3 hilos **~1.5-2m** - Sensor Omron (único cable largo)
-- [ ] Termorretráctil rojo/azul (varios tamaños)
+- [x] Cable USB-C a USB-C **~30-50cm** (datos) - SKR ↔ EBB42 ✅
+- [x] Cable 2x1.5mm² para 24V **~30-50cm** - SKR ↔ EBB42 ✅
+- [x] Cable I2C (4 hilos, incluido con Eddy Coil) - EBB42 ↔ Eddy Coil ✅
+- [x] Termorretráctil rojo/azul (varios tamaños)
 
 **Conectores:**
 - [ ] JST-XH 2-pin (x3 sets: 24V, heater, thermistor)
@@ -348,29 +362,35 @@ Si algo falla:
 
 **Ver detalles completos:** [FLASHEO_EBB42_EXITOSO.md](../../guides/phase3/FLASHEO_EBB42_EXITOSO.md)
 
-### 2. Documentación Stock
-- [ ] Fotografiar toolhead actual (10+ fotos, todos los ángulos)
-- [ ] Fotografiar conexiones actuales en frame superior
-- [ ] Etiquetar todos los cables existentes
+### 2. Documentación Stock ✅
+- [x] Fotografiar toolhead actual (10+ fotos, todos los ángulos)
+- [x] Fotografiar conexiones actuales en frame superior
+- [x] Etiquetar todos los cables existentes
 
-### 3. Fabricación Cables (Versión Temporal)
-- [ ] Cable 24V corto (~30-50cm): SKR FAN2 → EBB42 VIN
-- [ ] Cable USB-C corto (~30-50cm): SKR → EBB42
-- [ ] Cable sensor Omron largo (~1.5-2m): EBB42 → Toolhead
-- [ ] Verificar conectores JST-XH/Dupont en cables stock
+### 3. Fabricación Cables (Versión Temporal) ✅
+- [x] Cable 24V corto (~30-50cm): SKR FAN2 → EBB42 VIN
+- [x] Cable USB-C corto (~30-50cm): SKR → EBB42
+- [x] Cable I2C (incluido): EBB42 → Eddy Coil
+- [x] Verificar conectores JST-XH/Dupont en cables stock
 
-### 4. Montaje Físico
-- [ ] Montar EBB42 cerca de SKR (cinta doble cara + bridas)
-- [ ] Conectar cables cortos: USB-C y 24V (SKR ↔ EBB42)
-- [ ] Conectar cables stock toolhead a EBB42 (heater, therm, fans)
-- [ ] Tender cable sensor Omron a toolhead
+### 4. Montaje Físico ✅
+- [x] Montar EBB42 cerca de SKR (cinta doble cara + bridas)
+- [x] Conectar cables cortos: USB-C y 24V (SKR ↔ EBB42)
+- [x] Conectar cables stock toolhead a EBB42 (heater, therm, fans)
+- [x] Instalar Eddy Coil (I2C a EBB42)
 
-### 5. Verificación y Testing
-- [ ] Seguir checklist de testing en documentación
-- [ ] Verificar todas las funciones antes de operar
+### 5. Verificación y Testing ⏳
+- [x] Heater funcionando (PB13)
+- [x] Thermistor leyendo temperatura
+- [x] Fans operativos (PA0, PA1)
+- [ ] Eddy Coil calibrado (drive current + Z offset)
+- [ ] Homing completo G28
+- [ ] Bed mesh leveling
 
 ---
 
 **Inicio planificación:** 2025-12-21
 **Decisiones completadas:** 2025-12-21
-**Estado:** ✅ Listo para implementación física
+**Implementación hardware:** 2025-12-21
+**Upgrade Eddy Coil:** 2025-12-26
+**Estado:** ✅ Hardware instalado - Pendiente calibración Eddy Coil
