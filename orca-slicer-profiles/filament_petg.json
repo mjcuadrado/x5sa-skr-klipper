@@ -1,0 +1,146 @@
+{
+    "version": "1.9.0.0",
+    "name": "Generic PETG @Tronxy X5SA",
+    "type": "filament",
+    "from": "User",
+    "instantiation": "true",
+    "bed_temperature": [
+        "80"
+    ],
+    "bed_temperature_initial_layer": [
+        "85"
+    ],
+    "cool_plate_temp": [
+        "50"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "50"
+    ],
+    "eng_plate_temp": [
+        "75"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "80"
+    ],
+    "hot_plate_temp": [
+        "80"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "85"
+    ],
+    "textured_plate_temp": [
+        "80"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "85"
+    ],
+    "nozzle_temperature": [
+        "240"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "245"
+    ],
+    "nozzle_temperature_range_high": [
+        "260"
+    ],
+    "nozzle_temperature_range_low": [
+        "230"
+    ],
+    "filament_type": [
+        "PETG"
+    ],
+    "filament_is_support": [
+        "0"
+    ],
+    "filament_soluble": "0",
+    "compatible_printers": [
+        "Tronxy X5SA Klipper"
+    ],
+    "compatible_printers_condition": "",
+    "compatible_prints": [],
+    "compatible_prints_condition": "",
+    "filament_flow_ratio": [
+        "0.98"
+    ],
+    "filament_max_volumetric_speed": [
+        "12"
+    ],
+    "filament_colour": [
+        "#FFA500"
+    ],
+    "filament_diameter": [
+        "1.75"
+    ],
+    "filament_density": [
+        "1.27"
+    ],
+    "filament_cost": [
+        "25"
+    ],
+    "fan_min_speed": [
+        "20"
+    ],
+    "fan_max_speed": [
+        "50"
+    ],
+    "slow_down_min_speed": [
+        "15"
+    ],
+    "filament_start_gcode": [
+        "; Filament: PETG\n; Pressure Advance: Tune with Klipper (start ~0.055 for direct drive PETG)\n; SET_PRESSURE_ADVANCE ADVANCE=0.055"
+    ],
+    "filament_end_gcode": [
+        "; PETG cool down"
+    ],
+    "filament_settings_id": [
+        "Generic PETG"
+    ],
+    "filament_vendor": [
+        "Generic"
+    ],
+    "close_fan_the_first_x_layers": [
+        "3"
+    ],
+    "full_fan_speed_layer": [
+        "5"
+    ],
+    "additional_cooling_fan_speed": [
+        "0"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_deretraction_speed": [
+        "35"
+    ],
+    "filament_retraction_speed": [
+        "35"
+    ],
+    "filament_retract_length": [
+        "1.2"
+    ],
+    "filament_retract_lift": [
+        "0.2"
+    ],
+    "filament_notes": [
+        "Generic PETG profile for Tronxy X5SA with Klipper\n\nPrint Temperature: 240-245°C (adjust based on brand)\nBed Temperature: 80-85°C\nCooling: Minimal cooling - 20-50% max to prevent warping\n\nRetraction Settings (Firmware Controlled):\n- Distance: 1.2mm (slightly more than PLA, update in Klipper firmware_retraction)\n- Speed: 35mm/s (slower than PLA to reduce stringing)\n- Z-hop: 0.2mm\n- Update Klipper config: SET_RETRACTION RETRACT_LENGTH=1.2 RETRACT_SPEED=35\n\nPressure Advance:\n- Start with 0.055 for direct drive (PETG typically needs more than PLA)\n- Fine-tune using Klipper calibration\n- Add to filament_start_gcode: SET_PRESSURE_ADVANCE ADVANCE=0.055\n\nSpeed Guidelines:\n- Perimeters: 40-60 mm/s (slower than PLA for better layer adhesion)\n- Infill: 80-120 mm/s\n- First layer: 25 mm/s (slower for better bed adhesion)\n- Overhangs: 25-35 mm/s\n\nCooling Strategy:\n- PETG is sensitive to cooling - too much causes warping/delamination\n- Keep fan OFF for first 3 layers to ensure bed adhesion\n- Max fan speed: 50% (only use for bridging/overhangs)\n- For overhangs >50°: increase to 80-100% locally\n\nFlow Calibration:\n- Start with 98% flow ratio (PETG often over-extrudes slightly)\n- Calibrate per brand using flow calibration cube\n\nTips:\n- PETG is hygroscopic - MUST be dry (store with desiccant)\n- Clean bed with IPA before printing\n- Let bed cool before removing parts (PETG bonds strongly when hot)\n- Use glue stick or PEI sheet for best adhesion\n- First layer: aim for ~85°C bed temp for strong adhesion\n- Stringing: if excessive, increase retraction to 1.5mm or reduce temp 5°C\n"
+    ],
+    "overhang_fan_speed": [
+        "80"
+    ],
+    "overhang_fan_threshold": [
+        "50%"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "1"
+    ],
+    "filament_minimal_purge_on_wipe_tower": [
+        "20"
+    ],
+    "filament_wipe_distance": [
+        "2"
+    ],
+    "temperature_vitrification": [
+        "75"
+    ]
+}

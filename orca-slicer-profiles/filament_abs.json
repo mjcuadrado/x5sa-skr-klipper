@@ -1,0 +1,146 @@
+{
+    "version": "1.9.0.0",
+    "name": "Generic ABS @Tronxy X5SA",
+    "type": "filament",
+    "from": "User",
+    "instantiation": "true",
+    "bed_temperature": [
+        "100"
+    ],
+    "bed_temperature_initial_layer": [
+        "105"
+    ],
+    "cool_plate_temp": [
+        "90"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "90"
+    ],
+    "eng_plate_temp": [
+        "95"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "100"
+    ],
+    "hot_plate_temp": [
+        "100"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "105"
+    ],
+    "textured_plate_temp": [
+        "100"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "105"
+    ],
+    "nozzle_temperature": [
+        "250"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "255"
+    ],
+    "nozzle_temperature_range_high": [
+        "270"
+    ],
+    "nozzle_temperature_range_low": [
+        "240"
+    ],
+    "filament_type": [
+        "ABS"
+    ],
+    "filament_is_support": [
+        "0"
+    ],
+    "filament_soluble": "0",
+    "compatible_printers": [
+        "Tronxy X5SA Klipper"
+    ],
+    "compatible_printers_condition": "",
+    "compatible_prints": [],
+    "compatible_prints_condition": "",
+    "filament_flow_ratio": [
+        "1"
+    ],
+    "filament_max_volumetric_speed": [
+        "14"
+    ],
+    "filament_colour": [
+        "#3A80CA"
+    ],
+    "filament_diameter": [
+        "1.75"
+    ],
+    "filament_density": [
+        "1.04"
+    ],
+    "filament_cost": [
+        "22"
+    ],
+    "fan_min_speed": [
+        "0"
+    ],
+    "fan_max_speed": [
+        "30"
+    ],
+    "slow_down_min_speed": [
+        "10"
+    ],
+    "filament_start_gcode": [
+        "; Filament: ABS\n; WARNING: ABS requires heated enclosure or draft-free environment\n; Pressure Advance: Tune with Klipper (start ~0.045 for direct drive)\n; SET_PRESSURE_ADVANCE ADVANCE=0.045"
+    ],
+    "filament_end_gcode": [
+        "; ABS cool down slowly to prevent warping"
+    ],
+    "filament_settings_id": [
+        "Generic ABS"
+    ],
+    "filament_vendor": [
+        "Generic"
+    ],
+    "close_fan_the_first_x_layers": [
+        "5"
+    ],
+    "full_fan_speed_layer": [
+        "0"
+    ],
+    "additional_cooling_fan_speed": [
+        "0"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_deretraction_speed": [
+        "40"
+    ],
+    "filament_retraction_speed": [
+        "40"
+    ],
+    "filament_retract_length": [
+        "1"
+    ],
+    "filament_retract_lift": [
+        "0.2"
+    ],
+    "filament_notes": [
+        "Generic ABS profile for Tronxy X5SA with Klipper\n\n!! IMPORTANT - ENCLOSURE REQUIRED !!\nABS requires a heated enclosure or draft-free environment to prevent warping.\nIf you don't have an enclosure, consider using ABS+ or ASA instead.\n\nPrint Temperature: 250-255°C (adjust based on brand)\nBed Temperature: 100-105°C (critical for adhesion)\nChamber Temperature: 40-60°C (if available)\nCooling: MINIMAL - 0-30% max to prevent layer separation and warping\n\nRetraction Settings (Firmware Controlled):\n- Distance: 1.0mm (configured in Klipper firmware_retraction)\n- Speed: 40mm/s\n- Z-hop: 0.2mm\n- These values shown here for reference only; actual retraction controlled by Klipper\n\nPressure Advance:\n- Start with 0.045 for direct drive\n- Fine-tune using Klipper calibration\n- Add to filament_start_gcode: SET_PRESSURE_ADVANCE ADVANCE=0.045\n\nSpeed Guidelines:\n- Perimeters: 50-70 mm/s\n- Infill: 80-120 mm/s\n- First layer: 20 mm/s (slow for maximum adhesion)\n- Overhangs: 30-40 mm/s\n\nCooling Strategy:\n- ABS warps easily with too much cooling\n- Keep fan OFF for first 5 layers minimum\n- Max fan speed: 30% (only for overhangs >60° or bridges)\n- For large prints: consider fan completely OFF\n- Small features (<10mm): may need 20-30% cooling to prevent overheating\n\nBed Adhesion:\n- CRITICAL: Use ABS slurry, glue stick, or PEI sheet\n- Clean bed with IPA before printing\n- First layer: 105°C bed, 255°C nozzle for maximum adhesion\n- Use brim or raft for large prints to prevent corner lifting\n\nWarping Prevention:\n- Enclosed printer strongly recommended\n- Draft-free environment essential\n- Maintain consistent ambient temperature\n- Avoid opening enclosure during print\n- Let parts cool slowly in enclosure after print completes\n\nVentilation:\n- ABS emits styrene fumes - VENTILATION REQUIRED\n- Print in well-ventilated area or use air filtration\n- Do not print ABS without proper ventilation\n\nTips:\n- First layer adhesion is everything - if it doesn't stick, stop and adjust\n- Z-offset: ABS first layer should be slightly squished into bed\n- Post-processing: ABS can be smoothed with acetone vapor (in ventilated area)\n- Annealing: Heat parts in oven at 80°C for 2-3 hours for increased strength\n- Corner lifting: increase bed temp, use brim, or reduce part cooling\n"
+    ],
+    "overhang_fan_speed": [
+        "50"
+    ],
+    "overhang_fan_threshold": [
+        "75%"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "1"
+    ],
+    "filament_minimal_purge_on_wipe_tower": [
+        "20"
+    ],
+    "filament_wipe_distance": [
+        "2"
+    ],
+    "temperature_vitrification": [
+        "100"
+    ]
+}

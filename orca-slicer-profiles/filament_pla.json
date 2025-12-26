@@ -1,0 +1,146 @@
+{
+    "version": "1.9.0.0",
+    "name": "Generic PLA @Tronxy X5SA",
+    "type": "filament",
+    "from": "User",
+    "instantiation": "true",
+    "bed_temperature": [
+        "60"
+    ],
+    "bed_temperature_initial_layer": [
+        "60"
+    ],
+    "cool_plate_temp": [
+        "35"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "35"
+    ],
+    "eng_plate_temp": [
+        "55"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "55"
+    ],
+    "hot_plate_temp": [
+        "60"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "60"
+    ],
+    "textured_plate_temp": [
+        "60"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "60"
+    ],
+    "nozzle_temperature": [
+        "210"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "215"
+    ],
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "nozzle_temperature_range_low": [
+        "190"
+    ],
+    "filament_type": [
+        "PLA"
+    ],
+    "filament_is_support": [
+        "0"
+    ],
+    "filament_soluble": "0",
+    "compatible_printers": [
+        "Tronxy X5SA Klipper"
+    ],
+    "compatible_printers_condition": "",
+    "compatible_prints": [],
+    "compatible_prints_condition": "",
+    "filament_flow_ratio": [
+        "1"
+    ],
+    "filament_max_volumetric_speed": [
+        "15"
+    ],
+    "filament_colour": [
+        "#DDDDDD"
+    ],
+    "filament_diameter": [
+        "1.75"
+    ],
+    "filament_density": [
+        "1.24"
+    ],
+    "filament_cost": [
+        "20"
+    ],
+    "fan_min_speed": [
+        "20"
+    ],
+    "fan_max_speed": [
+        "100"
+    ],
+    "slow_down_min_speed": [
+        "20"
+    ],
+    "filament_start_gcode": [
+        "; Filament: PLA\n; Pressure Advance: Tune with Klipper (start ~0.04 for direct drive)\n; SET_PRESSURE_ADVANCE ADVANCE=0.04"
+    ],
+    "filament_end_gcode": [
+        "; PLA cool down"
+    ],
+    "filament_settings_id": [
+        "Generic PLA"
+    ],
+    "filament_vendor": [
+        "Generic"
+    ],
+    "close_fan_the_first_x_layers": [
+        "1"
+    ],
+    "full_fan_speed_layer": [
+        "3"
+    ],
+    "additional_cooling_fan_speed": [
+        "0"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_deretraction_speed": [
+        "40"
+    ],
+    "filament_retraction_speed": [
+        "40"
+    ],
+    "filament_retract_length": [
+        "1"
+    ],
+    "filament_retract_lift": [
+        "0.2"
+    ],
+    "filament_notes": [
+        "Generic PLA profile for Tronxy X5SA with Klipper\n\nPrint Temperature: 210-215°C (adjust based on brand)\nBed Temperature: 60°C\nCooling: Enable part cooling fan after layer 1, full speed by layer 3\n\nRetraction Settings (Firmware Controlled):\n- Distance: 1.0mm (configured in Klipper firmware_retraction)\n- Speed: 40mm/s\n- Z-hop: 0.2mm\n- These values shown here for reference only; actual retraction controlled by Klipper\n\nPressure Advance:\n- Start with 0.04 for direct drive Titan clone\n- Fine-tune using Klipper calibration: https://www.klipper3d.org/Pressure_Advance.html\n- Add to filament_start_gcode: SET_PRESSURE_ADVANCE ADVANCE=0.04\n\nSpeed Guidelines:\n- Perimeters: 60-80 mm/s\n- Infill: 100-150 mm/s\n- First layer: 30 mm/s\n- Overhangs: 30-40 mm/s\n\nCooling:\n- PLA benefits from aggressive cooling\n- Min speed: 20% for bridging and overhangs\n- Max speed: 100% for small features\n\nTips:\n- Ensure filament is dry (store in sealed container with desiccant)\n- For best results, calibrate flow ratio per filament brand\n- Z-offset: Adjust in Klipper for perfect first layer squish\n"
+    ],
+    "overhang_fan_speed": [
+        "100"
+    ],
+    "overhang_fan_threshold": [
+        "50%"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "0"
+    ],
+    "filament_minimal_purge_on_wipe_tower": [
+        "15"
+    ],
+    "filament_wipe_distance": [
+        "2"
+    ],
+    "temperature_vitrification": [
+        "55"
+    ]
+}

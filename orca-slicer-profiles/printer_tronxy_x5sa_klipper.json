@@ -1,0 +1,209 @@
+{
+    "version": "1.9.0.0",
+    "name": "Tronxy X5SA (Klipper - SKR 1.4 Turbo + EBB42)",
+    "type": "printer",
+    "from": "User",
+    "instantiation": "true",
+    "adaptive_bed_mesh_margin": "5",
+    "bed_custom_model": "",
+    "bed_custom_texture": "",
+    "bed_exclude_area": [
+        "0x0"
+    ],
+    "before_layer_change_gcode": "",
+    "change_extrusion_role_gcode": "",
+    "change_filament_gcode": "",
+    "default_filament_profile": [
+        "Generic PLA"
+    ],
+    "default_print_profile": "0.20mm Standard @Tronxy X5SA",
+    "deretraction_speed": [
+        "40"
+    ],
+    "emit_machine_limits_to_gcode": "1",
+    "extruder_clearance_height_to_lid": "140",
+    "extruder_clearance_height_to_rod": "36",
+    "extruder_clearance_radius": "47",
+    "extruder_colour": [
+        "#FCE94F"
+    ],
+    "extruder_offset": [
+        "0x0"
+    ],
+    "fan_kickstart": "0",
+    "fan_speedup_overhangs": "1",
+    "fan_speedup_time": "0",
+    "gcode_flavor": "klipper",
+    "host_type": "octoprint",
+    "layer_change_gcode": "",
+    "machine_end_gcode": "PRINT_END",
+    "machine_load_filament_time": "0",
+    "machine_max_acceleration_e": [
+        "10000",
+        "5000"
+    ],
+    "machine_max_acceleration_extruding": [
+        "3000",
+        "1250"
+    ],
+    "machine_max_acceleration_retracting": [
+        "3000",
+        "1250"
+    ],
+    "machine_max_acceleration_travel": [
+        "3000",
+        "1250"
+    ],
+    "machine_max_acceleration_x": [
+        "3000",
+        "1000"
+    ],
+    "machine_max_acceleration_y": [
+        "3000",
+        "1000"
+    ],
+    "machine_max_acceleration_z": [
+        "30",
+        "200"
+    ],
+    "machine_max_jerk_e": [
+        "5",
+        "2.5"
+    ],
+    "machine_max_jerk_x": [
+        "10",
+        "10"
+    ],
+    "machine_max_jerk_y": [
+        "10",
+        "10"
+    ],
+    "machine_max_jerk_z": [
+        "0.4",
+        "0.4"
+    ],
+    "machine_max_speed_e": [
+        "60",
+        "25"
+    ],
+    "machine_max_speed_x": [
+        "300",
+        "200"
+    ],
+    "machine_max_speed_y": [
+        "300",
+        "200"
+    ],
+    "machine_max_speed_z": [
+        "25",
+        "12"
+    ],
+    "machine_min_extruding_rate": [
+        "0",
+        "0"
+    ],
+    "machine_min_travel_rate": [
+        "0",
+        "0"
+    ],
+    "machine_pause_gcode": "PAUSE",
+    "machine_start_gcode": "M104 S0 ; Stops OrcaSlicer from sending temp waits separately\nM140 S0\nPRINT_START BED_TEMP=[bed_temperature_initial_layer_single] EXTRUDER_TEMP=[nozzle_temperature_initial_layer]",
+    "machine_unload_filament_time": "0",
+    "manual_filament_change": "0",
+    "max_layer_height": [
+        "0.32"
+    ],
+    "min_layer_height": [
+        "0.08"
+    ],
+    "nozzle_diameter": [
+        "0.4"
+    ],
+    "nozzle_hrc": "0",
+    "nozzle_type": "hardened_steel",
+    "nozzle_volume": "0",
+    "printable_area": [
+        "0x0",
+        "330x0",
+        "330x330",
+        "0x330"
+    ],
+    "printable_height": "400",
+    "printer_model": "Tronxy X5SA",
+    "printer_notes": "Tronxy X5SA CoreXY printer with Klipper firmware\n\nHardware Configuration:\n- Main MCU: BTT SKR 1.4 Turbo (LPC1769)\n- Toolhead MCU: BTT EBB42 CAN V1.2 (via USB mode)\n- Kinematics: CoreXY\n- Build Volume: 330×330×400mm\n- Drivers: 5× TMC2209 UART\n- Probe: BIGTREETECH Eddy Coil V1.0 (rapid_scan capable)\n- Extruder: Direct drive Titan clone (Phase 3-11), Orbiter v2 (Phase 12+)\n- Hotend: Stock V6 clone with PT100 sensor\n- Max Velocity: 300 mm/s\n- Max Acceleration: 3000 mm/s²\n\nKlipper Features:\n- Firmware retraction enabled (G10/G11)\n- Pressure advance tuning recommended\n- Adaptive bed meshing with rapid_scan\n- Input shaper for resonance compensation\n- Sensorless homing (X/Y axes)\n\nAvailable Macros:\n- PRINT_START (params: BED_TEMP, EXTRUDER_TEMP)\n- PRINT_END\n- PAUSE, RESUME, CANCEL_PRINT\n\nCalibration Notes:\n- Pressure advance: Start with 0.04 for direct drive, tune per filament\n- Retraction: Configured in firmware (1.0mm @ 40mm/s for direct drive)\n- First layer: Use Z-offset adjustment in Klipper\n\nMulticolor Support:\n- Phase 12 will add multicolor capability with Orbiter v2\n- Profiles prepared for future expansion",
+    "printer_settings_id": "Tronxy X5SA Klipper",
+    "printer_structure": "corexy",
+    "printer_technology": "FFF",
+    "printer_variant": "0.4",
+    "printhost_apikey": "",
+    "printhost_authorization_type": "key",
+    "printhost_cafile": "",
+    "printhost_password": "",
+    "printhost_port": "",
+    "printhost_ssl_ignore_revoke": "0",
+    "printhost_user": "",
+    "printing_by_object_gcode": "",
+    "retraction_minimum_travel": [
+        "1.5"
+    ],
+    "retraction_speed": [
+        "40"
+    ],
+    "retract_before_wipe": [
+        "100%"
+    ],
+    "retract_length": [
+        "1"
+    ],
+    "retract_length_toolchange": [
+        "1"
+    ],
+    "retract_lift": [
+        "0.2"
+    ],
+    "retract_lift_above": [
+        "0.2"
+    ],
+    "retract_lift_below": [
+        "399"
+    ],
+    "retract_lift_top": [
+        "All Surfaces"
+    ],
+    "retract_restart_extra": [
+        "0"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0"
+    ],
+    "retract_when_changing_layer": [
+        "1"
+    ],
+    "scan_first_layer": "0",
+    "silent_mode": "0",
+    "single_extruder_multi_material": "0",
+    "support_air_filtration": "0",
+    "support_chamber_temp_control": "0",
+    "template_custom_gcode": "",
+    "thumbnails": [
+        "300x300",
+        "32x32"
+    ],
+    "thumbnails_format": "PNG",
+    "time_lapse_gcode": "",
+    "use_firmware_retraction": "1",
+    "use_relative_e_distances": "1",
+    "wipe": [
+        "1"
+    ],
+    "wipe_distance": [
+        "2"
+    ],
+    "z_hop": [
+        "0.2"
+    ],
+    "z_hop_types": [
+        "Normal Lift"
+    ],
+    "z_offset": "0"
+}

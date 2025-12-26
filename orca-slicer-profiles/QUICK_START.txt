@@ -1,0 +1,83 @@
+ORCASLICER PROFILES - QUICK START GUIDE
+========================================
+
+CREATED: 2025-12-26
+FOR: Tronxy X5SA + Klipper (SKR 1.4 Turbo + EBB42)
+
+FILES CREATED:
+--------------
+1. printer_tronxy_x5sa_klipper.json - Printer configuration
+2. filament_pla.json - PLA settings (210°C / 60°C bed)
+3. filament_petg.json - PETG settings (240°C / 80°C bed)
+4. filament_abs.json - ABS settings (250°C / 100°C bed)
+5. process_draft.json - Draft quality (0.3mm layers)
+6. process_standard.json - Standard quality (0.2mm layers)
+7. process_fine.json - Fine quality (0.1mm layers)
+8. README.md - Complete documentation
+
+INSTALLATION (Easy Method):
+---------------------------
+1. Open OrcaSlicer
+2. Import Printer:
+   - Printer tab → Gear icon → Import
+   - Select: printer_tronxy_x5sa_klipper.json
+
+3. Import Filaments:
+   - Filament tab → Gear icon → Import
+   - Select: filament_pla.json, filament_petg.json, filament_abs.json
+
+4. Import Processes:
+   - Process tab → Gear icon → Import
+   - Select: process_draft.json, process_standard.json, process_fine.json
+
+CRITICAL FEATURES:
+------------------
+✓ Klipper PRINT_START/PRINT_END macros integrated
+✓ Firmware retraction enabled (G10/G11)
+✓ Adaptive bed meshing with rapid_scan
+✓ Pressure advance ready (tune per filament)
+✓ Prepared for multicolor (Phase 12)
+
+START G-CODE (Automatic):
+-------------------------
+PRINT_START BED_TEMP=[bed_temperature_initial_layer_single] EXTRUDER_TEMP=[nozzle_temperature_initial_layer]
+
+This calls your Klipper macro which handles:
+- Heating
+- Homing
+- Z-tilt adjustment
+- Adaptive bed mesh
+- Nozzle purge
+
+RECOMMENDED FIRST PRINT:
+------------------------
+Profile: Standard (0.2mm)
+Filament: PLA
+Print: 20mm calibration cube
+Settings: Default (no changes needed)
+
+BEFORE FIRST PRINT:
+-------------------
+☐ Verify PID tuning completed (hotend & bed)
+☐ Calibrate E-steps (rotation_distance)
+☐ Set probe Z-offset (PROBE_EDDY_CURRENT_CALIBRATE)
+☐ Generate bed mesh (GENERATE_BED_MESH)
+☐ Test first layer with paper test
+
+TROUBLESHOOTING:
+----------------
+First layer too close: SET_GCODE_OFFSET Z_ADJUST=0.05 MOVE=1
+First layer too far: SET_GCODE_OFFSET Z_ADJUST=-0.05 MOVE=1
+Stringing: Tune pressure advance or increase retraction
+Poor adhesion: Check Z-offset, clean bed, increase bed temp
+
+MORE INFO:
+----------
+See README.md for complete documentation, calibration guides,
+and troubleshooting tips.
+
+SUPPORT RESOURCES:
+------------------
+- Klipper Docs: https://www.klipper3d.org/
+- Ellis' Guide: https://ellis3dp.com/Print-Tuning-Guide/
+- OrcaSlicer Wiki: https://github.com/SoftFever/OrcaSlicer/wiki

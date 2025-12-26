@@ -389,8 +389,210 @@ Si algo falla:
 
 ---
 
+## 📝 Configuración y Calibración - Phase 3 (2025-12-26)
+
+### Estado Configuración: ⚙️ EN PROGRESO
+
+Esta sección documenta la **configuración de software** y **calibración** completa del sistema Phase 3.
+
+---
+
+### 🔧 Configuración Klipper Completada
+
+**Fecha:** 2025-12-26
+
+**Archivo configurado:** `/Users/mjcuadrado/projects/x5sa-skr-klipper/klipper/config/printer.cfg`
+
+#### Cambios Principales
+
+**1. Eddy Coil Rapid Scan Optimizado**
+- ✅ `speed: 120` (optimizado para rapid_scan)
+- ✅ `lift_speed: 60` (movimientos rápidos)
+- ✅ `horizontal_move_z: 2` (crítico para rapid_scan)
+- ✅ Configuración I2C completa (EBB42 PB3/PB4)
+
+**2. Bed Mesh Adaptativo**
+- ✅ `probe_count: 5, 5` (25 puntos, ~15 segundos)
+- ✅ `scan_overshoot: 8` (requerido para rapid_scan)
+- ✅ `adaptive_margin: 5` (mesh adaptativo por pieza)
+- ✅ Algoritmo bicubic para interpolación
+
+**Decisión Técnica: ¿Por qué 5×5 y NO 50×50?**
+- 5×5 (25 puntos) + bicubic interpolation = precisión óptima
+- 50×50 (2500 puntos) = >15 minutos (vs 15 segundos)
+- Adaptive meshing solo sondea área de impresión + margen
+- Referencia: Klipper docs + Ellis' guide recomiendan 5×5 a 7×7
+
+**3. Macros de Producción Implementados**
+
+**PRINT_START:**
+- Heating bed + precalentar extrusor 150°C
+- G28 homing
+- Z_TILT_ADJUST (dual Z leveling)
+- **BED_MESH_CALIBRATE METHOD=rapid_scan ADAPTIVE=1** (~15 seg)
+- Purge line (30mm filamento)
+
+**PRINT_END:**
+- Safe Z retract
+- Parking trasero
+- Apagar heaters/fans
+- Retract 5mm
+- Clear bed mesh
+
+**PAUSE / RESUME / CANCEL_PRINT:**
+- Gestión completa de pausas
+- Retracción automática
+- Parking seguro
+
+**4. Macros de Calibración**
+
+Disponibles:
+- `CALIBRATE_EDDY_CURRENT` - Calibración completa Eddy Coil
+- `GENERATE_BED_MESH` - Mesh completo con rapid_scan
+- `PID_TUNE_HOTEND TARGET=200` - PID hotend
+- `PID_TUNE_BED TARGET=60` - PID bed
+- `CALIBRATE_EXTRUDER` - Helper E-steps
+- `PRESSURE_ADVANCE_CALIBRATION` - Helper PA tuning
+- `RETRACTION_CALIBRATION` - Helper retraction tuning
+- `TEST_SPEED` - Test velocidad/aceleración (Ellis)
+- `VERIFY_EDDY_PROBE` - Safety check probe
+
+**5. Firmware Retraction**
+- ✅ Habilitado: `retract_length: 1.0mm @ 40mm/s`
+- ✅ Control centralizado en Klipper
+- ✅ Ajustes en tiempo real sin re-slicear
+
+**Ver documentación completa:** [CONFIGURACION_KLIPPER.md](../../guides/phase3/CONFIGURACION_KLIPPER.md)
+
+---
+
+### 🎨 Perfiles OrcaSlicer Creados
+
+**Fecha:** 2025-12-26
+
+**Ubicación:** `/Users/mjcuadrado/projects/x5sa-skr-klipper/orca-slicer-profiles/`
+
+#### Perfiles Disponibles
+
+**Printer Profile:**
+- `printer_tronxy_x5sa_klipper.json`
+- Build volume: 330×330×400mm
+- Integración completa macros Klipper
+- Firmware retraction habilitado
+
+**Filament Profiles:**
+- `filament_pla.json` - 210°C / 60°C bed, cooling 100%
+- `filament_petg.json` - 240°C / 80°C bed, cooling 20-50%
+- `filament_abs.json` - 250°C / 100°C bed, cooling 0-30% (⚠️ requiere enclosure)
+
+**Process Profiles:**
+- `process_draft.json` - 0.30mm Draft (rápido, prototipos)
+- `process_standard.json` - 0.20mm Standard (uso general)
+- `process_fine.json` - 0.10mm Fine (miniaturas, detalles)
+
+#### Características Clave
+
+- ✅ **Start G-code:** `PRINT_START BED_TEMP=[...] EXTRUDER_TEMP=[...]`
+- ✅ **End G-code:** `PRINT_END`
+- ✅ **Adaptive bed meshing** automático (~15 seg/impresión)
+- ✅ **Firmware retraction** (G10/G11)
+- ✅ **Pressure advance** configurado por filamento
+- ✅ **Exclude objects** habilitado
+- ✅ **Preparado multicolor** (Phase 12)
+
+**Ver guía completa:** [ORCA_SLICER_SETUP.md](../../guides/phase3/ORCA_SLICER_SETUP.md)
+
+---
+
+### 📋 Checklist de Calibración
+
+**Estado:** ⏳ Pendiente ejecución
+
+#### Calibraciones Obligatorias (ANTES de primera impresión)
+
+- [ ] **1. PID Hotend** - `PID_TUNE_HOTEND TARGET=210`
+- [ ] **2. PID Bed** - `PID_TUNE_BED TARGET=60`
+- [ ] **3. E-steps** - Calibrar rotation_distance
+- [ ] **4. Eddy Drive Current** - `LDC_CALIBRATE_DRIVE_CURRENT` (solo 1 vez)
+- [ ] **5. Z Offset** - `CALIBRATE_EDDY_CURRENT`
+- [ ] **6. Z-Tilt Adjust** - Nivelar dual Z
+- [ ] **7. Bed Mesh** - `GENERATE_BED_MESH`
+
+**Tiempo estimado:** 2.5 - 4 horas
+
+#### Calibraciones Recomendadas (mejoran calidad)
+
+- [ ] **8. Pressure Advance** - Por tipo de filamento (PLA, PETG, ABS)
+- [ ] **9. Retraction** - Si hay stringing
+- [ ] **10. Input Shaper** - Reduce ringing (requiere ADXL345)
+
+**Tiempo estimado adicional:** 1 - 2 horas
+
+**Ver guía paso a paso:** [CALIBRACION_COMPLETA.md](../../guides/phase3/CALIBRACION_COMPLETA.md)
+
+---
+
+### 📚 Documentación Configuración Phase 3
+
+| Documento | Tema | Estado |
+|-----------|------|--------|
+| [CONFIGURACION_KLIPPER.md](../../guides/phase3/CONFIGURACION_KLIPPER.md) | Configuración printer.cfg detallada | ✅ Completo |
+| [ORCA_SLICER_SETUP.md](../../guides/phase3/ORCA_SLICER_SETUP.md) | Instalación y uso OrcaSlicer | ✅ Completo |
+| [CALIBRACION_COMPLETA.md](../../guides/phase3/CALIBRACION_COMPLETA.md) | Checklist y procedimientos calibración | ✅ Completo |
+| [EDDY_COIL_CALIBRATION.md](../../guides/phase3/EDDY_COIL_CALIBRATION.md) | Calibración específica Eddy Coil | ✅ Existente |
+
+---
+
+### 🎯 Decision Log - Configuración
+
+#### Decisión: Rapid Scan con 5×5 Grid (NO 50×50)
+
+**Fecha:** 2025-12-26
+
+**Contexto:**
+- Eddy Coil V1.0 soporta modo rapid_scan (muestreo continuo)
+- Decisión crítica: tamaño del grid de sondeo
+
+**Opciones evaluadas:**
+
+**Opción A: 5×5 grid (25 puntos)**
+- ✅ Tiempo: ~15 segundos con rapid_scan
+- ✅ Suficiente para bicubic interpolation
+- ✅ Recomendado por Klipper docs + Ellis' guide
+- ✅ Adaptive meshing reduce aún más (3×3 para piezas pequeñas)
+
+**Opción B: 50×50 grid (2500 puntos)**
+- ❌ Tiempo: ~15-20 minutos con rapid_scan
+- ❌ Innecesario para camas tramadas correctamente
+- ❌ Desgaste excesivo del probe
+- ❌ Sin mejora real en calidad vs 5×5 + bicubic
+
+**Decisión:** 5×5 grid + adaptive meshing
+
+**Razones:**
+1. Tiempo de inicio de impresión crítico (~15 seg acceptable)
+2. Bicubic interpolation compensa con precisión
+3. Adaptive meshing optimiza por pieza
+4. Soporte técnico de comunidad Klipper
+
+**Implementación:**
+```ini
+[bed_mesh]
+probe_count: 5, 5
+algorithm: bicubic
+adaptive_margin: 5
+```
+
+**Referencias:**
+- Klipper bed_mesh docs
+- Ellis' Print Tuning Guide
+- [HARDWARE_EVOLUTION.md](../../HARDWARE_EVOLUTION.md) - Decisión Eddy Coil
+
+---
+
 **Inicio planificación:** 2025-12-21
 **Decisiones completadas:** 2025-12-21
 **Implementación hardware:** 2025-12-21
 **Upgrade Eddy Coil:** 2025-12-26
-**Estado:** ✅ Hardware instalado - Pendiente calibración Eddy Coil
+**Configuración software:** 2025-12-26 ✅
+**Estado:** ✅ Hardware instalado + Software configurado - ⏳ Pendiente calibración
