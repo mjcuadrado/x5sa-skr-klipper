@@ -494,7 +494,9 @@ Invertir 2+ días en hacer funcionar Tronxy XY-08N.
 
 ## Próximos Pasos
 
-### Inmediatos (Esta semana)
+**Roadmap actualizado:** Ver [ROADMAP.md](ROADMAP.md) - Metodología 4-8-12
+
+### Fase Actual: Phase 3 (INSTALAR Eddy) - Finalización
 
 1. **Instalación física Eddy Coil** ⏳
    - Montar coil 2-3mm sobre nozzle
@@ -502,64 +504,88 @@ Invertir 2+ días en hacer funcionar Tronxy XY-08N.
    - Verificar clearance y cable routing
 
 2. **Calibración Eddy Coil** ⏳
-   - `LDC_CALIBRATE_DRIVE_CURRENT`
-   - `PROBE_EDDY_CURRENT_CALIBRATE`
+   - `LDC_CALIBRATE_DRIVE_CURRENT CHIP=btt_eddy`
+   - `PROBE_EDDY_CURRENT_CALIBRATE CHIP=btt_eddy`
    - Verificar precisión con `PROBE_ACCURACY`
 
 3. **Testing de homing** ⏳
-   - `G28` completo (X, Y, Z)
-   - Verificar Z homing con Eddy Coil
-   - Ajustar z_offset según necesidad
+   - `G28 X`, `G28 Y` (sensorless homing)
+   - `G28 Z` (con Eddy Coil)
+   - `G28` completo funcional
 
-4. **Bed leveling** ⏳
-   - `Z_TILT_ADJUST` (dual Z)
-   - `BED_MESH_CALIBRATE` (5×5 grid)
-   - `SAVE_CONFIG`
+**Criterio de éxito Phase 3:**
+- ✅ Comando `G28` completa sin errores
+- ✅ Eddy detecta metal correctamente
+- ✅ Sistema listo para calibración
 
-5. **Primera impresión de prueba** ⏳
-   - Cube 20mm
-   - Verificar primera capa
-   - Ajuste fino si necesario
+### Phase 4: CALIBRAR Stock → Perfiles funcionales
 
-### Phase 4-7 (Próximas semanas)
+**Objetivo:** Máquina stock completamente calibrada
 
-**Phase 4:** Calibración completa
-- PID tuning fino
-- Input shaper (ADXL345 en EBB42)
-- E-steps / rotation distance
-- Pressure advance
+**Calibraciones Klipper:**
+1. PID tuning hotend @ 210°C (PLA)
+2. PID tuning bed @ 60°C
+3. E-steps calibration (rotation_distance)
+4. Z-Tilt adjustment (dual Z leveling)
+5. Bed mesh rapid_scan (5×5)
+6. Pressure advance (Titan clone direct drive)
+7. Retraction tuning (1.0-2.0mm @ 40mm/s)
+8. Flow rate calibration
+9. Input Shaper (ADXL345 en EBB42)
+10. Velocidades y aceleraciones
 
-**Phase 5:** Cable management
-- Routing definitivo de cables
-- Protección térmica
-- Anillos ferrita
-- Estética
+**Perfiles OrcaSlicer:**
+- Importar perfiles en OrcaSlicer
+- Validar PRINT_START/PRINT_END
+- Test print inicial (cubo 20mm)
 
-**Phase 6:** Testing extensivo
-- Prints de calibración
-- Stringing tests
-- Temperature towers
-- Retraction tuning
+**Resultado:** Primera impresión exitosa con calidad baseline
 
-**Phase 7:** Optimización
-- Velocidades máximas
-- Aceleraciones
-- Jerk settings
-- Firmware updates
+### Phase 5: VALIDAR 4-8-12 (Stock)
 
-### Phase 8-12 (Futuro)
+**Metodología 4-8-12:**
+- **Test 1:** 4 horas de impresión (validación básica)
+- **Test 2:** 8 horas de impresión (estabilidad térmica)
+- **Test 3:** 12 horas de impresión (confiabilidad completa)
 
-**Phase 8-11:** Mejoras incrementales
-- Mejoras según resultados de prints
-- Ajustes finos de configuración
-- Posibles upgrades menores
+**Criterio de éxito:**
+- ✅ Las 3 impresiones completadas SIN FALLOS
+- ✅ Calidad consistente
+- ✅ Sistema robusto y confiable
 
-**Phase 12:** Stealthburner + Orbiter v2 (GRANDE)
-- Migración de EBB42 a toolhead (definitivo)
-- Orbiter v2 extruder
-- Stealthburner toolhead
-- PT100 sensor (MAX31865)
-- Integración final
+**Resultado:** 🎉 IMPRESORA 100% FUNCIONAL CON HARDWARE STOCK
+
+### Phase 6-8: VORON (Futuro)
+
+**Phase 6: INSTALAR Voron**
+- Voron Stealthburner toolhead
+- Orbiter 2.5 extruder
+- Dragonfly BMO hotend
+- EBB42 movida al toolhead
+
+**Phase 7: CALIBRAR Voron**
+- Calibración completa para Orbiter
+- Nuevos perfiles OrcaSlicer
+- Velocidades optimizadas (>300mm/s)
+
+**Phase 8: VALIDAR 4-8-12 Voron**
+- 3 impresiones progresivas validación
+- Calidad superior a stock
+
+### Phase 9-11: MULTICOLOR (Futuro)
+
+**Phase 9: INSTALAR Multicolor**
+- Sistema MMU/AMS montado
+
+**Phase 10: CALIBRAR Multicolor**
+- Perfiles multicolor
+
+**Phase 11: VALIDAR 4-8-12 Multicolor**
+- 3 impresiones multicolor validación
+
+### Phase 12: Optimización Final
+
+**Resultado:** 🏆 PROYECTO COMPLETO
 
 ---
 
@@ -570,7 +596,7 @@ Invertir 2+ días en hacer funcionar Tronxy XY-08N.
 **Main guides:**
 - [README.md](README.md) - Project overview
 - [GUIDE.md](GUIDE.md) - Main migration guide
-- [ROADMAP.md](ROADMAP.md) - 8-phase technical roadmap
+- [ROADMAP.md](ROADMAP.md) - 12-phase technical roadmap (v3.0 - metodología 4-8-12)
 
 **Phase documentation:**
 - [Phase 0](phases/phase0/README.md) - Baseline

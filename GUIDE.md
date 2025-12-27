@@ -80,84 +80,96 @@ Cada guía de paso incluye:
 
 ## 🗺️ Fases del Proyecto
 
-### Phase 0: Baseline ✅
-**Estado:** Completada
-**Objetivo:** Documentar estado inicial
+**Metodología v3.0:** INSTALAR → CALIBRAR → VALIDAR (4-8-12 hrs)
 
-### Phase 1: SKR 1.4 Turbo - Preparación ✅
-**Estado:** Completada (2025-12-20)
-**Objetivo:** Placa con drivers, sin cablear
-**Tiempo real:** 2 horas
+### Phase 0-2: Base Electrónica ✅
+**Estado:** Completadas (2025-12-20 a 2025-12-21)
+**Objetivo:** SKR 1.4 Turbo + TMC2209 instalados y cableados
+**Tiempo real:** 8 horas
 
-**Pasos:**
-1. [SKR stock sin tocar](guides/phase1/step1_skr_stock.md) ✅
-2. [Configuración jumpers UART](guides/phase1/step2_uart_jumpers.md) ✅
-3. [Orientación drivers TMC2209](guides/phase1/step3_driver_orientation.md) ✅
-4. [Instalación física drivers](guides/phase1/step4_driver_installation.md) ✅
-5. [Verificación visual final](guides/phase1/step5_verification.md) ✅
+**Documentación:**
+- [Phase 1 guides](guides/phase1/) - SKR preparación (drivers, jumpers)
+- [Phase 2 guides](guides/phase2/) - SKR montaje y cableado básico
 
-### Phase 2: SKR Cableado Básico ✅
-**Estado:** Completada (2025-12-21)
-**Objetivo:** SKR montada y cableada (motores, cama, alimentación)
-**Tiempo real:** 6 horas
+### Phase 3: INSTALAR Eddy → G28 funcional ✅/⏳
+**Estado:** Hardware completado, pendiente calibración
+**Objetivo:** Máquina hace home correctamente con nueva electrónica
+**Tiempo real:** 4-6 horas (hardware)
 
-**Decisión arquitectónica:** SKR montada en posición superior + EBB42 CAN desde inicio
+**Hardware objetivo:**
+- SKR 1.4 Turbo ✅ (instalada)
+- EBB42 CAN V1.2 ✅ (flasheada, montada detrás)
+- Eddy Coil V1.0 ✅ (configurado software, pendiente instalación física)
+- Hardware stock: Titan clone, E3D V6 clone, fans stock
 
-**Pasos:**
-1. [Documentación wiring stock](guides/phase2/step1_documentation.md) ✅
-2. [Desconexión electrónica stock](guides/phase2/step2_stock_disconnection.md) ✅
-3. [Montaje SKR posición superior](guides/phase2/step3_skr_mounting.md) ✅
-4. [Cableado básico SKR](guides/phase2/step4_skr_basic_wiring.md) ✅
-5. [Verificación final Phase 2](guides/phase2/step5_verification.md) ✅
+**Documentación:** [guides/phase3/](guides/phase3/)
 
-**Logros:**
-- 36 fotos documentadas
-- Cable extensión Motor Z2 fabricado (JST-XH 4-pin, 60cm)
-- Cable extensión 24V (50cm, termorretráctil rojo/azul)
-- Sensorless homing X/Y (TMC2209)
+⬅️ **FASE ACTUAL:** Completar instalación física Eddy Coil y calibración
 
-### Phase 3: Toolhead EBB42 CAN 📋
+### Phase 4: CALIBRAR Stock → Perfiles funcionales ⏳
 **Estado:** Pendiente
-**Objetivo:** Toolhead con comunicación CAN bus
-**Tiempo estimado:** 4-6 horas ⬅️ **SIGUIENTE**
+**Objetivo:** Máquina stock completamente calibrada con perfiles listos
+**Tiempo estimado:** 6-8 horas
 
-**Componentes a integrar:**
-- Instalación EBB42 V1.2 en toolhead
-- Motor extrusor (E0) → EBB42
-- Calentador + termistor hotend → EBB42
-- Ventiladores → EBB42
-- Sensor Omron TL-Q5MC1-Z → EBB42
-- Cable CAN 4 hilos (Cat6 + alimentación separada)
-- Configuración CAN bus
+**Tareas principales:**
+- PID tuning (hotend + bed)
+- E-steps calibration
+- Bed mesh rapid_scan (5×5)
+- Pressure advance tuning
+- Perfiles OrcaSlicer ajustados
 
-### Phase 4: Cama + Sensor Inductivo 📋
+**Resultado:** Primera impresión cubo 20mm exitosa
+
+### Phase 5: VALIDAR 4-8-12 (Hardware Stock) ⏳
 **Estado:** Pendiente
-**Objetivo:** Bed heating + Z probing
+**Objetivo:** Validar configuración stock con impresiones progresivas
+**Tiempo estimado:** 24-30 horas (tiempo de impresión)
+
+**Metodología 4-8-12:**
+- Test 1: 4 horas de impresión (validación básica)
+- Test 2: 8 horas de impresión (estabilidad térmica)
+- Test 3: 12 horas de impresión (confiabilidad completa)
+
+**Resultado:** 🎉 IMPRESORA 100% FUNCIONAL CON HARDWARE STOCK
+
+### Phase 5.5: Instalación Fleje PEI (Opcional) 🔮
+**Estado:** Futuro opcional
+**Objetivo:** Instalar superficie PEI magnética nueva
 **Tiempo estimado:** 2-3 horas
 
-### Phase 5: Toolhead Stock 📋
-**Estado:** Pendiente
-**Objetivo:** Primera impresión funcional
-**Tiempo estimado:** 3-4 horas
-
-### Phase 6-7: EBB42 CAN 📋
-**Estado:** Pendiente
-**Objetivo:** Toolhead con comunicación CAN
-**Tiempo estimado:** 5-6 horas
-
-### Phase 8-9: PT100 + ADXL345 📋
-**Estado:** Pendiente
-**Objetivo:** Sensores de alta precisión
-**Tiempo estimado:** 4-6 horas
-
-### Phase 10-11: Input Shaper + Calibraciones 📋
-**Estado:** Pendiente
-**Objetivo:** Sistema completamente optimizado
-**Tiempo estimado:** 6-10 horas
-
-### Phase 12: Upgrades PRO 📋
+### Phase 6: INSTALAR Voron → Toolhead nuevo 🔮
 **Estado:** Futuro
-**Objetivo:** Hardware premium opcional
+**Objetivo:** Voron Stealthburner montado y funcionando
+**Tiempo estimado:** 6-8 horas
+
+**Hardware nuevo:**
+- Voron Stealthburner toolhead
+- Orbiter 2.5 extruder
+- Dragonfly BMO hotend
+- EBB42 movida al toolhead
+
+### Phase 7: CALIBRAR Voron → Perfiles Orbiter 🔮
+**Estado:** Futuro
+**Objetivo:** Voron completamente calibrado
+**Tiempo estimado:** 6-8 horas
+
+### Phase 8: VALIDAR 4-8-12 (Voron) 🔮
+**Estado:** Futuro
+**Objetivo:** Validar Voron con impresiones progresivas
+**Tiempo estimado:** 24-30 horas
+
+**Resultado:** 🎉 VORON STEALTHBURNER 100% VALIDADO
+
+### Phase 9-11: Multicolor (MMU/AMS) 🔮
+**Estado:** Futuro
+**Objetivo:** Sistema multicolor instalado, calibrado y validado
+**Tiempo estimado:** 60-80 horas total
+
+### Phase 12: Optimización final 🔮
+**Estado:** Futuro
+**Objetivo:** Sistema completamente optimizado y documentado
+
+**Resultado:** 🏆 PROYECTO COMPLETO
 
 ---
 

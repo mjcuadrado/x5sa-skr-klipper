@@ -1,382 +1,733 @@
-# ROADMAP COMPLETO: Migración Tronxy X5SA a Klipper con SKR 1.4 Turbo
-
-**Proyecto:** Migración profesional y documentada Tronxy X5SA/Pro → Klipper
-**Hardware objetivo:** BTT SKR 1.4 Turbo + TMC2209 + EBB42 CAN
-**Filosofía:** Manual "para tontos", paso a paso, sin asumir conocimientos
-
----
-
-## RESUMEN TÉCNICO DEL HARDWARE
-
-### Impresora Base: Tronxy X5SA / X5SA Pro
-
-**Cinemática:** CoreXY
-**Volumen:** 330×330×400mm
-**Voltaje:** 24V DC
-**Estructura:** Perfil aluminio con guías lineales
-
-**Motores originales:**
-- X/Y (CoreXY): 2× motores NEMA17, ~1.1A corriente típica
-- Z: 2× motores NEMA17 con leadscrew (dual Z independiente)
-- Extrusor: 1× motor NEMA17, ~1.05A
-
-**Problemas conocidos del stock:**
-- Firmware Chitu limitado y con bugs
-- Z-offset inaccesible después de actualizaciones
-- Auto-leveling defectuoso (crash con cama)
-- Drivers ruidosos y configuración pobre
-
-### Electrónica Nueva: BTT SKR 1.4 Turbo
-
-**MCU:** NXP LPC1769 ARM Cortex-M3 @ 120MHz
-**Drivers:** 5× slots para TMC2209 (UART)
-**Voltaje:** 12-24V DC (compatible con 24V stock)
-**Ventajas:** 20% más rápida que SKR 1.4, pinout idéntico, excelente soporte Klipper
-
-### Drivers: TMC2209
-
-**Modo:** UART (control completo por software)
-**Corriente configurable:** 650mA - 1200mA
-**Features:** StealthChop (silencioso), StallGuard (sensorless homing)
-
-### Toolhead: BTT EBB42 CAN V1.2
-
-**MCU:** STM32G0B1 @ 64MHz
-**Comunicación:** CAN Bus (4 cables) o USB
-**Integrado:** TMC2209, ADXL345, MAX31865
-**Ventaja:** Reduce 20-24 cables a solo 4 cables
+# ROADMAP v3.0 - Metodología 4-8-12
+**Proyecto:** Migración Tronxy X5SA a Klipper (SKR 1.4 Turbo + EBB42)
+**Filosofía:** INSTALAR → CALIBRAR → VALIDAR (4-8-12 hrs)
+**Versión:** 3.0
+**Fecha:** 2025-12-27
 
 ---
 
-## ESTRUCTURA DE FASES
+## 🎯 FILOSOFÍA DEL PROYECTO
 
-### PHASE 0 ✅ (Completada)
-**Estado:** Baseline, inventario, auditoría
-**Documentación:** Estado inicial de impresora stock
+### **Patrón de cada grupo de fases:**
 
-### PHASE 1 ✅ (Completada 2025-12-20)
-**Nombre:** SKR 1.4 Turbo - Preparación de electrónica
-**Objetivo:** Placa lista con drivers, SIN cablear
-**Duración real:** 2 horas
+```
+┌─────────────┐
+│  INSTALAR   │  Hardware físico montado y funcionando básicamente
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│  CALIBRAR   │  Software configurado, perfiles creados, sistema optimizado
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│  VALIDAR    │  Impresiones progresivas 4-8-12 horas SIN FALLOS
+│  (4-8-12)   │  Valida que todo funciona en producción real
+└─────────────┘
+```
 
-**Pasos completados:**
-1. SKR stock documentada
-2. Jumpers UART configurados (10 jumpers MS3)
-3. Orientación drivers documentada
-4. Drivers instalados físicamente
-5. Verificación visual final
+### **Regla 4-8-12:**
 
-**Resultado:** SKR con 5× TMC2209 correctamente instalados, disipadores, sin cables, sin alimentación
+Cada validación consiste en **3 impresiones progresivamente más largas:**
 
-### PHASE 2 ✅ (Completada 2025-12-21)
-**Nombre:** SKR Cableado Básico
-**Objetivo:** SKR montada y cableada (motores, cama, alimentación)
-**Duración real:** 6 horas
+1. **4 horas:** Primera validación, detectar problemas básicos
+2. **8 horas:** Validación media, estabilidad térmica
+3. **12 horas:** Validación larga, confiabilidad completa
 
-**Decisión arquitectónica crítica:**
-- SKR montada en posición superior (frame superior)
-- EBB42 CAN integrado desde inicio (no toolhead stock temporal)
-- Sensorless homing X/Y (TMC2209 StallGuard, sin endstops físicos)
-- Sensor Z en EBB42 (Omron TL-Q5MC1-Z)
+**Criterio de éxito:** Las 3 impresiones se completan **sin intervención, sin fallos, con calidad consistente**.
 
-**Pasos completados:**
-1. Documentación wiring stock completo (31 fotos)
-2. Desconexión completa electrónica stock
-3. Montaje SKR posición superior + fabricación extensiones:
-   - Cable extensión Motor Z2 (JST-XH 4-pin, 60cm)
-   - Cable extensión 24V (50cm, termorretráctil rojo/azul)
-4. Cableado básico SKR:
-   - Alimentación 24V → DCIN
-   - Motores X, Y, Z1, Z2 (E1 para segundo Z)
-   - Cama caliente (power HB + termistor TB)
-5. Verificación final (36 fotos totales)
+---
 
-**Resultado:** SKR cableada y lista para EBB42 CAN (Phase 3)
+## 📊 RESUMEN VISUAL DE FASES
 
-### PHASE 3 📋 (En curso) ⬅️ SIGUIENTE
-**Nombre:** Toolhead EBB42 CAN
-**Objetivo:** Toolhead completo con comunicación CAN bus
+```
+GRUPO 1: HARDWARE STOCK (Phases 0-5)
+──────────────────────────────────────
+Phase 0-2: ✅ Base electrónica
+Phase 3:   📋 INSTALAR Eddy → G28 funcional
+Phase 4:   ⏳ CALIBRAR Stock → Perfiles funcionales
+Phase 5:   ⏳ VALIDAR 4-8-12 → Stock 100% ✅
+
+GRUPO 2: HARDWARE VORON (Phases 6-8)
+──────────────────────────────────────
+Phase 6:   🔮 INSTALAR Voron → Toolhead nuevo
+Phase 7:   🔮 CALIBRAR Voron → Perfiles Orbiter
+Phase 8:   🔮 VALIDAR 4-8-12 → Voron 100% ✅
+
+GRUPO 3: MULTICOLOR (Phases 9-11)
+──────────────────────────────────────
+Phase 9:   🔮 INSTALAR Multicolor → MMU/AMS
+Phase 10:  🔮 CALIBRAR Multicolor → Perfiles multi
+Phase 11:  🔮 VALIDAR 4-8-12 → Multicolor 100% ✅
+
+FINALIZACIÓN (Phase 12)
+──────────────────────────────────────
+Phase 12:  🔮 Optimización final → PROYECTO COMPLETO 🏆
+```
+
+---
+
+## ✅ PHASES 0-2: BASE ELECTRÓNICA (COMPLETADAS)
+
+### **Phase 0: Baseline** ✅
+- **Objetivo:** Documentación estado inicial
+- **Duración:** -
+- **Estado:** Completada
+- **Tag:** `phase0-baseline`
+
+### **Phase 1: SKR Preparación** ✅
+- **Objetivo:** SKR con drivers instalados, sin cables
+- **Duración:** 2 horas
+- **Estado:** Completada 2025-12-20
+- **Resultado:** SKR 1.4 Turbo + 5× TMC2209 listos
+
+### **Phase 2: SKR Wiring** ✅
+- **Objetivo:** SKR cableada (motores, cama, PSU)
+- **Duración:** 6 horas
+- **Estado:** Completada 2025-12-21
+- **Resultado:** SKR operativa, motores conectados
+
+---
+
+## 📋 PHASE 3: INSTALAR EDDY → G28 FUNCIONAL
+
+**Objetivo:** Máquina hace home correctamente con nueva electrónica
+
+**Hardware objetivo:**
+- SKR 1.4 Turbo ✅ (ya instalada)
+- EBB42 CAN V1.2 ✅ (ya flasheada, montada detrás)
+- Eddy Coil V1.0 ⏳ (pendiente instalación física)
+- **Todo lo demás STOCK:** Titan clone, E3D V6 clone, fans stock
+
+### **Tareas:**
+
+**Software (YA COMPLETADO):**
+- [x] Firmware SKR flasheado
+- [x] Firmware EBB42 flasheado
+- [x] printer.cfg base configurado
+- [x] Eddy Coil I2C configurado (PB3/PB4)
+- [x] Macros básicas creadas
+
+**Hardware (PENDIENTE):**
+1. [ ] **Fotografiar estado actual toolhead** (con XY-08N si aún instalado)
+2. [ ] **Desmontar XY-08N** (si presente)
+3. [ ] **Instalar Eddy Coil físicamente** (2-3mm sobre nozzle)
+4. [ ] **Conectar cables I2C** (4 wires: VCC, GND, SCL, SDA)
+5. [ ] **Routing cable por drag chain** (desde toolhead → EBB42 detrás)
+6. [ ] **Verificar QUERY_PROBE** responde
+7. [ ] **Calibrar drive current:** `LDC_CALIBRATE_DRIVE_CURRENT CHIP=btt_eddy`
+8. [ ] **Calibrar Z offset básico:** `PROBE_EDDY_CURRENT_CALIBRATE CHIP=btt_eddy`
+
+**Testing:**
+- [ ] **G28 X** funciona (sensorless homing)
+- [ ] **G28 Y** funciona (sensorless homing)
+- [ ] **G28 Z** funciona (con Eddy Coil)
+- [ ] **G28** completo funciona
+
+### **Criterio de éxito Phase 3:**
+✅ Comando `G28` completa sin errores
+✅ Eddy detecta metal correctamente (QUERY_PROBE)
+✅ Z homing funciona con Eddy
+✅ Máquina puede moverse en XYZ
+
+### **Deliverables:**
+- 📦 Fotos completas instalación Eddy
+- 📦 LOG_INSTALACION.md completado
+- 📦 printer.cfg con Eddy funcional
+- 📦 Sistema listo para calibración (Phase 4)
+
 **Duración estimada:** 4-6 horas
+**Estado:** 📋 EN CURSO
+**Documentación:** [guides/phase3/](guides/phase3/)
 
-**Pasos planeados:**
-1. Documentar toolhead stock actual (fotos)
-2. Desconectar cables toolhead de stock
-3. Instalar EBB42 en toolhead (diseñar/imprimir soporte si necesario)
-4. Conectar componentes a EBB42:
-   - Motor extrusor (E0 driver integrado)
-   - Calentador hotend
-   - Termistor hotend (o PT100 directo)
-   - Ventiladores (hotend fan + part cooling)
-   - Sensor Omron TL-Q5MC1-Z (probe Z)
-5. Fabricar cable CAN (4 hilos):
-   - Cat6 para CAN_H/CAN_L (par trenzado)
-   - Cable alimentación separado para 24V/GND
-   - Identificación con termorretráctil
-6. Tender cable CAN desde SKR a toolhead
-7. Conectar CAN bus (verificar polaridad, terminación 120Ω)
+---
 
-**Resultado:** Toolhead con EBB42 montado, cableado, listo para firmware
+## ⏳ PHASE 4: CALIBRAR STOCK → PERFILES FUNCIONALES
 
-### PHASE 4 📋 (Pendiente)
-**Nombre:** Firmware Klipper + Configuración Completa
-**Objetivo:** Klipper corriendo en SKR + EBB42, sistema funcional
-**Duración estimada:** 3-4 horas
+**Objetivo:** Máquina stock completamente calibrada con perfiles listos
 
-**Pasos:**
-1. **Compilar y flashear firmware:**
-   - Klipper para SKR 1.4 Turbo (LPC1769 @ 120MHz)
-   - Klipper para EBB42 CAN (STM32G0B1, modo CAN)
-   - Obtener canbus_uuid con `canbus_query.py`
+**Hardware:** Extrusor Titan clone stock, E3D V6 clone, fans stock
 
-2. **Configurar printer.cfg base:**
-   - MCU principal (SKR) + MCU toolhead (EBB42)
-   - Cinemática CoreXY
-   - TMC2209 en modo UART (X, Y, Z1, Z2, E0)
-   - Sensorless homing X/Y (StallGuard)
-   - Dual Z independiente
+### **Tareas - Calibración Klipper:**
 
-3. **Configurar toolhead:**
-   - Extrusor (motor + heater + termistor/PT100)
-   - Ventiladores (hotend + part cooling)
-   - Probe Omron (Z homing + bed mesh)
+**Térmica:**
+1. [ ] **PID tuning hotend** @ 210°C (PLA)
+   - Comando: `PID_TUNE_HOTEND TARGET=210`
+   - Resultado: Kp, Ki, Kd
+2. [ ] **PID tuning bed** @ 60°C
+   - Comando: `PID_TUNE_BED TARGET=60`
+   - Resultado: Kp, Ki, Kd
 
-4. **Configurar cama caliente:**
-   - Heater_bed + termistor
-   - PID tuning cama
+**Mecánica:**
+3. [ ] **E-steps calibration** (rotation_distance)
+   - Test 100mm extrusion
+   - Ajustar rotation_distance (actual: 22.478 Titan clone)
+4. [ ] **Z-Tilt adjustment**
+   - Comando: `Z_TILT_ADJUST`
+   - Dual Z leveling
+5. [ ] **Bed mesh rapid_scan** (5×5)
+   - Comando: `BED_MESH_CALIBRATE METHOD=rapid_scan`
+   - Tiempo: ~15 segundos
+   - Analizar rango (ideal <0.5mm)
 
-5. **Calibraciones iniciales:**
-   - Tuning corriente TMC2209
-   - Sensorless homing sensitivity
-   - Probe Z offset
-   - Bed mesh básico (5×5)
-   - PID tuning hotend
-   - Rotation_distance extrusor
+**Calidad:**
+6. [ ] **Pressure advance** (Titan clone direct drive)
+   - Ellis' pattern generator
+   - Rango típico: 0.03-0.05
+7. [ ] **Retraction tuning** (direct drive)
+   - Retraction tower
+   - Rango típico: 1.0-2.0mm @ 40mm/s
+8. [ ] **Flow rate calibration**
+   - Starting point: 100%
+   - Ajustar por marca de filamento
 
-**Resultado:** Sistema completamente funcional, listo para primera impresión
+**Avanzado:**
+9. [ ] **Input Shaper** (ADXL345 en EBB42)
+   - `TEST_RESONANCES AXIS=X`
+   - `TEST_RESONANCES AXIS=Y`
+   - Configurar shaper_freq y shaper_type
+10. [ ] **Velocidades y aceleraciones**
+    - Test max_velocity actual: 300mm/s
+    - Test max_accel actual: 3000mm/s²
+    - Ajustar según input shaper
 
-### PHASE 5 📋 (Pendiente)
-**Nombre:** Primera Impresión + Calibraciones Básicas
-**Objetivo:** Primera impresión exitosa + ajustes básicos
-**Duración estimada:** 3-4 horas
+### **Tareas - Perfiles OrcaSlicer:**
 
-**Pasos:**
-1. Verificación pre-impresión completa
-2. Test de extrusión (100mm → 100mm real)
-3. First layer calibration (papel test)
-4. Impresión calibración (cubo XYZ 20mm)
-5. Ajustes flow rate inicial
-6. Retraction tuning básico
-7. Temperature tower (material preferido)
-8. Bed mesh refinado si necesario
-9. Macros básicas (START_PRINT, END_PRINT)
-10. Test prints funcionales
+**Estado actual:**
+- ✅ Perfiles ya creados en `orca-slicer-profiles/`
+  - Printer: `printer_tronxy_x5sa_klipper.json`
+  - Filaments: PLA, PETG, ABS
+  - Process: Draft (0.3mm), Standard (0.2mm), Fine (0.1mm)
 
-**Resultado:** Impresora imprimiendo correctamente, calidad baseline establecida
+**Ajustes necesarios:**
+11. [ ] **Importar perfiles** en OrcaSlicer
+12. [ ] **Validar PRINT_START** funciona con adaptive mesh
+13. [ ] **Validar PRINT_END** funciona
+14. [ ] **Ajustar PA values** según calibración real
+15. [ ] **Ajustar retraction** según calibración real
+16. [ ] **Test print inicial** (cubo 20mm)
 
-### PHASE 6 📋 (Pendiente)
-**Nombre:** Input Shaper + ADXL345
-**Objetivo:** Optimización de vibraciones y alta velocidad
+### **Criterio de éxito Phase 4:**
+✅ Primera impresión cubo 20mm exitosa
+✅ Primera capa perfecta (adhesión, nivelación)
+✅ Dimensiones precisas (20mm ±0.1mm)
+✅ Sin stringing, sin warping
+✅ Temperatura estable durante impresión
+
+### **Deliverables:**
+- 📦 `printer.cfg` completamente calibrado (valores finales documentados)
+- 📦 Perfiles OrcaSlicer ajustados y validados
+- 📦 `CALIBRACION_COMPLETA.md` con valores reales obtenidos
+- 📦 Fotos/videos primera impresión exitosa
+
+**Duración estimada:** 6-8 horas
+**Estado:** ⏳ PENDIENTE
+**Documentación:** [guides/phase3/CALIBRACION_COMPLETA.md](guides/phase3/CALIBRACION_COMPLETA.md)
+
+---
+
+## ⏳ PHASE 5: VALIDAR 4-8-12 (HARDWARE STOCK)
+
+**Objetivo:** Validar configuración stock con impresiones progresivas
+
+### **Metodología 4-8-12:**
+
+#### **Test 1: 4 horas de impresión**
+- **Pieza:** Benchy o modelo funcional pequeño (~3-4 hrs)
+- **Material:** PLA (perfil Standard 0.2mm)
+- **Observar:**
+  - [ ] Primera capa se adhiere correctamente
+  - [ ] No hay warping en esquinas
+  - [ ] Temperatura estable todo el tiempo
+  - [ ] Sin layer shifts
+  - [ ] Calidad visual general buena
+- **Ajustes permitidos:** Tweaks menores (±2% flow, baby stepping)
+
+#### **Test 2: 8 horas de impresión**
+- **Pieza:** Funcional compleja o modelo decorativo (~7-8 hrs)
+- **Material:** PETG o PLA (perfil Standard/Fine)
+- **Observar:**
+  - [ ] Estabilidad térmica prolongada (bed + hotend)
+  - [ ] Consistencia de calidad capa a capa
+  - [ ] Sin fallos de adhesión a mitad de impresión
+  - [ ] Overhangs bien soportados
+  - [ ] Puentes limpios
+- **Ajustes permitidos:** Solo si algo falla crítico
+
+#### **Test 3: 12 horas de impresión**
+- **Pieza:** Grande o muy compleja (~10-12 hrs)
+- **Material:** El que prefieras (validar confiabilidad)
+- **Observar:**
+  - [ ] Completa sin intervención
+  - [ ] Sin fallos térmicos (thermal runaway)
+  - [ ] Sin fallos mecánicos (belt skip, etc.)
+  - [ ] Calidad final excelente
+  - [ ] Dimensiones precisas post-print
+- **Ajustes permitidos:** NINGUNO (debe funcionar tal cual)
+
+### **Criterio de éxito Phase 5:**
+✅ Las 3 impresiones (4-8-12 hrs) completadas SIN FALLOS
+✅ Calidad consistente en todas
+✅ Sin ajustes mayores necesarios entre prints
+✅ Sistema robusto y confiable
+
+### **Resultado:**
+**🎉 IMPRESORA 100% FUNCIONAL CON NUEVA ELECTRÓNICA + HARDWARE STOCK**
+
+Este es un **MILESTONE CRÍTICO**: la impresora está lista para producción con hardware stock.
+
+**Duración estimada:** ~24-30 horas (tiempo de impresión real)
+**Estado:** ⏳ PENDIENTE
+
+---
+
+## 🔮 PHASE 5.5: INSTALACIÓN FLEJE NUEVO PEI (OPCIONAL)
+
+**⚠️ FASE INSERTADA ANTES DE VORON PARA NO DAÑAR FLEJE NUEVO**
+
+**Objetivo:** Instalar superficie de impresión PEI magnética nueva
+
+**Razón de timing:**
+- ✅ Hardware stock ya validado completamente (Phase 5)
+- ✅ No arriesgar fleje nuevo durante calibraciones iniciales
+- ✅ Empezar Voron con superficie nueva (óptima adhesión)
+
+**Hardware:**
+- Fleje PEI magnético (doble cara o texturizado)
+- Base magnética para cama
+
+### **Tareas:**
+1. [ ] Limpiar cama caliente completamente
+2. [ ] Instalar base magnética en cama
+3. [ ] Colocar fleje PEI
+4. [ ] **Re-generar bed mesh** (superficie nueva puede tener diferente planitud)
+5. [ ] **Ajustar Z offset** (espesor fleje nuevo)
+6. [ ] **Test adhesión** con PLA/PETG/ABS
+7. [ ] **Ajustar bed temp** si necesario (PEI puede requerir ±5°C)
+
+### **Criterio de éxito:**
+✅ Primera capa se adhiere perfectamente en PEI
+✅ Piezas se liberan fácilmente al enfriar
+✅ No hay daños en superficie PEI
+
 **Duración estimada:** 2-3 horas
-
-**Pasos:**
-1. Verificar ADXL345 integrado en EBB42
-2. Configurar [adxl345] en printer.cfg
-3. Ejecutar `TEST_RESONANCES AXIS=X`
-4. Ejecutar `TEST_RESONANCES AXIS=Y`
-5. Generar gráficos de resonancia
-6. Analizar frecuencias problemáticas
-7. Configurar [input_shaper] con valores óptimos
-8. Ajustar max_accel y max_velocity
-9. Test de ringing/ghosting
-10. Impresión a alta velocidad (100-150 mm/s)
-
-**Resultado:** Input shaping configurado, vibraciones eliminadas, alta velocidad
-
-### PHASE 7 📋 (Pendiente)
-**Nombre:** Calibraciones Finales + Optimización
-**Objetivo:** Sistema completamente optimizado
-**Duración estimada:** 4-6 horas
-
-**Pasos:**
-1. Pressure Advance tuning fino
-2. Retraction tuning avanzado
-3. Flow rate calibration por material
-4. Bed mesh refinado (7×7 o 9×9)
-5. Z offset fine-tuning
-6. Sensorless homing optimization
-7. Temperature towers múltiples materiales
-8. Macros avanzadas (limpieza nozzle, purge, etc.)
-9. Test prints de calidad (benchy, torture test)
-10. Documentación parámetros finales
-
-**Resultado:** Impresora completamente calibrada y optimizada
-
-### PHASE 8 📋 (Futuro - Opcional)
-**Nombre:** Upgrades "PRO"
-**Objetivo:** Hardware premium y mejoras opcionales
-
-**Posibles mejoras:**
-- Fleje PEI magnético (mejor adherencia)
-- Extrusor Orbiter v2 (más ligero, mejor retracción)
-- Hotend alta temperatura Dragon/Rapido (250°C+)
-- Ventiladores Noctua (silenciosos)
-- Neopixels/LED strips (iluminación)
-- Cámara + timelapse (Crowsnest/Mainsail)
-- Sensores filamento (runout detection)
-- Cable chains mejoradas
-- Drag chain para cables
-
-**Criterio:** Solo después de estabilidad completa (Phase 7 terminada)
+**Estado:** 🔮 FUTURO OPCIONAL (antes de Phase 6)
 
 ---
 
-## MATRIZ DE DEPENDENCIAS
+## 🔮 PHASE 6: INSTALAR VORON → TOOLHEAD NUEVO
 
-| Fase | Depende de | Bloquea a | Reversible | Notas |
-|------|------------|-----------|------------|-------|
-| 0 | - | 1 | ✅ | Documentación |
-| 1 | 0 | 2 | ✅ | SKR preparación |
-| 2 | 1 | 3 | ⚠️ | Requiere desconexión stock completa |
-| 3 | 2 | 4 | ⚠️ | Montaje EBB42, cables stock no reversibles |
-| 4 | 3 | 5 | ✅ | Firmware y configuración |
-| 5 | 4 | 6 | ✅ | Primera impresión |
-| 6 | 5 | 7 | ✅ | Input Shaper (requiere impresora funcional) |
-| 7 | 6 | 8 | ✅ | Calibraciones finales |
-| 8 | 7 | - | ✅ | Upgrades opcionales
+**Objetivo:** Voron Stealthburner montado y funcionando básicamente
 
----
+**Hardware nuevo:**
+- Voron Stealthburner toolhead (impreso durante Phases 3-5)
+- Orbiter 2.5 extruder
+- Dragonfly BMO hotend (HF o UHF)
+- EBB42 movida DE detrás → DENTRO del toolhead
+- Eddy Coil montado en Stealthburner
 
-## HERRAMIENTAS NECESARIAS
+### **Preparación (durante Phases 3-5):**
+- [ ] Imprimir TODAS las piezas Voron (ver `stls/phase12/PRINT_QUEUE_PHASE12.md`)
+- [ ] Comprar Orbiter 2.5 (~€80)
+- [ ] Comprar Dragonfly BMO (~€80)
+- [ ] Verificar tipo de guías lineales (MGN12/MGN9)
 
-### Herramientas básicas
-- [ ] Destornilladores (Phillips, plano)
-- [ ] Juego de llaves Allen/hexagonales
-- [ ] Pinzas de punta fina
-- [ ] Cortaalambres/pelacables
-- [ ] Crimpadora (para Dupont/JST)
+### **Tareas - Desmontaje Stock:**
+1. [ ] Fotografiar toolhead stock completo (referencia)
+2. [ ] Desconectar todos los cables del toolhead
+3. [ ] Desmontar toolhead stock completo
+4. [ ] Desmontar EBB42 de posición detrás del frame
+5. [ ] Guardar piezas stock (reversibilidad)
 
-### Herramientas de medición
-- [ ] Multímetro digital
-- [ ] Calibre (pie de rey)
-- [ ] Nivel (para verificar estructura)
+### **Tareas - Montaje Voron:**
+6. [ ] Montar X carriage Voron (según tipo de guías)
+7. [ ] Instalar Stealthburner main body
+8. [ ] Instalar Orbiter 2.5 en mount
+9. [ ] Instalar Dragonfly BMO en cowl/front
+10. [ ] Montar EBB42 dentro de Stealthburner
+11. [ ] Conectar motor Orbiter a EBB42
+12. [ ] Conectar heater Dragonfly a EBB42
+13. [ ] Conectar thermistor/PT100 a EBB42
+14. [ ] Conectar fans (hotend + part cooling)
+15. [ ] Montar Eddy Coil en Stealthburner mount
+16. [ ] Conectar Eddy I2C a EBB42
+17. [ ] **Cablear todo con cables CORTOS** (EBB42 está EN toolhead ahora)
+18. [ ] Routing final de cables por drag chain
 
-### Herramientas de soldadura (opcional)
-- [ ] Soldador 60W
-- [ ] Estaño 60/40
-- [ ] Flux
-- [ ] Desoldador/trenza
+### **Testing básico:**
+- [ ] `QUERY_PROBE` funciona (Eddy)
+- [ ] Heater calienta correctamente
+- [ ] Thermistor lee temperatura
+- [ ] Fans funcionan
+- [ ] **G28** completo funciona
 
-### Materiales consumibles
-- [ ] Cables AWG22 (rojo, negro, amarillo, azul)
-- [ ] Conectores Dupont
-- [ ] Conectores JST-XH
-- [ ] Fundas PET expandibles
-- [ ] Mangas trenzadas
-- [ ] Etiquetas para cables
-- [ ] Cinta Kapton
-- [ ] Zip ties
-- [ ] Tornillería M3, M4, M5
+### **Criterio de éxito Phase 6:**
+✅ Voron Stealthburner montado completamente
+✅ EBB42 integrada en toolhead (no detrás)
+✅ G28 funciona con nuevo toolhead
+✅ Heater + thermistor + fans operativos
+✅ Eddy Coil detecta correctamente
 
-### Seguridad
-- [ ] Alfombrilla ESD
-- [ ] Pulsera antiestática
-- [ ] Gafas de seguridad
-- [ ] Guantes (para manipular vidrio/metal)
-
----
-
-## ESTIMACIÓN TEMPORAL
-
-| Fase | Tiempo estimado | Tiempo real | Estado |
-|------|----------------|-------------|--------|
-| 0 | - | - | ✅ Completada |
-| 1 | 2-3h | 2h | ✅ Completada |
-| 2 | 4-6h | 6h | ✅ Completada |
-| 3 | 4-6h | - | 📋 En curso |
-| 4 | 3-4h | - | 📋 Pendiente |
-| 5 | 3-4h | - | 📋 Pendiente |
-| 6 | 2-3h | - | 📋 Pendiente |
-| 7 | 4-6h | - | 📋 Pendiente |
-| 8 | Variable | - | 📋 Opcional |
-| **TOTAL (1-7)** | **22-32h** | **8h completadas** | **14-24h restantes** |
-
-**Tiempo invertido:** 8 horas (Phases 1-2)
-**Tiempo restante estimado:** 14-24 horas (Phases 3-7)
-**Total proyecto:** 22-32 horas hasta impresora completamente calibrada
-
-**Recomendación:** Planificar 4-6 días adicionales con sesiones de 3-5 horas, permitiendo descansos y troubleshooting.
+**Duración estimada:** 6-8 horas
+**Estado:** 🔮 FUTURO
+**Documentación:** A crear en `guides/phase6/`
 
 ---
 
-## PUNTOS DE VERIFICACIÓN CRÍTICOS
+## 🔮 PHASE 7: CALIBRAR VORON → PERFILES ORBITER
 
-### Antes de alimentar por primera vez
-- [ ] Verificar polaridad 24V (multímetro)
-- [ ] Verificar no hay cortocircuitos (continuidad)
-- [ ] Todos los drivers correctamente orientados
-- [ ] Jumpers UART correctos (10 jumpers)
-- [ ] No hay cables sueltos o pelados
-- [ ] Fusibles correctos (15A-20A)
+**Objetivo:** Voron completamente calibrado con perfiles funcionales
 
-### Antes de mover motores
-- [ ] Corriente TMC configurada (no exceder spec motor)
-- [ ] Endstops funcionando (`M119`)
-- [ ] Homing_speed bajo (20-30 mm/s inicial)
-- [ ] Verificar dirección de motores
+**Hardware:** Orbiter 2.5 + Dragonfly BMO
 
-### Antes de calentar
-- [ ] Termistores leyendo temperatura ambiente correcta
-- [ ] PID configurado
-- [ ] Thermal runaway protection habilitado
-- [ ] Max_temp conservador (250°C inicial)
+### **⚠️ IMPORTANTE: Muchos valores CAMBIAN vs stock**
 
-### Antes de primera impresión
-- [ ] Z offset calibrado (papel test)
-- [ ] Bed mesh cargado
-- [ ] Flow rate ~90-100%
-- [ ] Test de extrusión correcto (100mm → 100mm real)
+| Parámetro | Stock (Titan) | Voron (Orbiter 2.5) | Cambio |
+|-----------|---------------|---------------------|--------|
+| rotation_distance | ~22.478 | ~4.637 | Completamente diferente |
+| gear_ratio | 66:22 (3:1) | 7.5:1 | Diferente |
+| Pressure advance | 0.03-0.05 | 0.03-0.06 | Similar pero re-tune |
+| Retraction | 1.0-2.0mm | 0.5-1.5mm | Menor (direct drive mejor) |
+| Retraction speed | 40mm/s | 30-50mm/s | Ajustar |
+| Max velocity | 300mm/s | 350-400mm/s | Mayor (toolhead más ligero) |
+| Max accel | 3000mm/s² | 5000-8000mm/s² | Mucho mayor |
+
+### **Tareas - Calibración Klipper:**
+
+**Térmica:**
+1. [ ] **PID tuning Dragonfly BMO**
+   - Nuevo hotend = nuevos valores PID
+   - Target según material (ej. 210°C PLA)
+2. [ ] **Verificar PID bed** (probablemente OK, pero check)
+
+**Mecánica:**
+3. [ ] **E-steps Orbiter 2.5**
+   - rotation_distance inicial: 4.637
+   - gear_ratio: 7.5:1
+   - Calibrar con test 100mm
+4. [ ] **Z offset con nuevo toolhead**
+   - Altura toolhead cambió
+   - Re-calibrar con PROBE_EDDY_CURRENT_CALIBRATE
+5. [ ] **Bed mesh** (verificar si cambió)
+   - Probablemente similar, pero regenerar
+
+**Calidad:**
+6. [ ] **Pressure advance Orbiter**
+   - Rango típico: 0.03-0.06
+   - Ellis' pattern generator
+7. [ ] **Retraction Orbiter**
+   - Rango típico: 0.5-1.5mm @ 30-50mm/s
+   - Mucho menor que Titan
+8. [ ] **Flow rate** (Dragonfly BMO)
+   - Starting point: 100%
+   - Dragonfly puede tener mejor flow
+
+**Avanzado:**
+9. [ ] **Input Shaper** (toolhead weight cambió)
+   - TEST_RESONANCES X/Y
+   - Frecuencias serán DIFERENTES
+   - Toolhead Voron más ligero = mayor accel posible
+10. [ ] **Velocidades optimizadas**
+    - Test max_velocity: 350-400mm/s
+    - Test max_accel: 5000-8000mm/s²
+    - Voron permite mucho más que stock
+
+### **Tareas - Nuevos Perfiles OrcaSlicer:**
+
+11. [ ] **Crear perfiles filament Orbiter** (copiar de stock, ajustar PA y retraction)
+12. [ ] **Crear perfiles process Voron** (mayores velocidades)
+13. [ ] **Ajustar aceleraciones** en perfiles
+14. [ ] **Test print inicial** (cubo 20mm con Orbiter)
+
+### **Criterio de éxito Phase 7:**
+✅ Primera impresión Orbiter exitosa
+✅ Calidad igual o MEJOR que stock
+✅ Aprovecha velocidades mayores (>300mm/s)
+✅ Retracciones menores pero limpias
+✅ Sin stringing ni oozing
+
+### **Deliverables:**
+- 📦 `printer.cfg` actualizado para Orbiter 2.5
+- 📦 Perfiles OrcaSlicer Voron (PLA/PETG/ABS)
+- 📦 Documentación valores Orbiter vs Titan
+- 📦 Fotos/videos primera impresión Voron
+
+**Duración estimada:** 6-8 horas
+**Estado:** 🔮 FUTURO
 
 ---
 
-## RECURSOS DE REFERENCIA
+## 🔮 PHASE 8: VALIDAR 4-8-12 (VORON)
 
-### Documentación oficial
-- [Klipper Documentation](https://www.klipper3d.org/)
-- [BTT SKR 1.4 Turbo GitHub](https://github.com/bigtreetech/BIGTREETECH-SKR-V1.3/tree/master/BTT%20SKR%20V1.4)
-- [BTT EBB42 GitHub](https://github.com/bigtreetech/EBB)
-- [TMC2209 Datasheet](https://www.trinamic.com/products/integrated-circuits/details/tmc2209-la/)
+**Objetivo:** Validar Voron con impresiones progresivas
 
-### Configuraciones de referencia
-- [Klipper Tronxy X5SA Pro config](https://github.com/Klipper3d/klipper/blob/master/config/printer-tronxy-x5sa-pro-2020.cfg)
-- [Community configs](https://github.com/markcarroll/tronxy-x5sa)
+### **Metodología 4-8-12 (Voron):**
 
-### Guías y tutoriales
-- [Voron Wiring Guide](https://docs.vorondesign.com/build/electrical/v2_skr14_wiring.html)
-- [Klipper Input Shaper](https://www.klipper3d.org/Measuring_Resonances.html)
-- [TMC Drivers Klipper](https://www.klipper3d.org/TMC_Drivers.html)
+#### **Test 1: 4 horas**
+- Material: PLA Standard
+- **Aprovechar velocidades Voron** (print time puede reducirse 20-30%)
+- Observar calidad a alta velocidad
+
+#### **Test 2: 8 horas**
+- Material: PETG o ABS
+- Validar thermal performance Dragonfly BMO
+- Verificar retracciones Orbiter
+
+#### **Test 3: 12 horas**
+- Material: Lo que prefieras
+- Confiabilidad sistema completo Voron
+- Calidad superior a stock
+
+### **Criterio de éxito Phase 8:**
+✅ 3 impresiones (4-8-12) completadas sin fallos
+✅ Calidad SUPERIOR a stock (o al menos igual)
+✅ Velocidades mayores aprovechadas
+✅ Toolhead Voron confiable
+
+### **Resultado:**
+**🎉 VORON STEALTHBURNER 100% VALIDADO**
+
+**Duración estimada:** ~24-30 horas (tiempo de impresión)
+**Estado:** 🔮 FUTURO
 
 ---
 
-## FILOSOFÍA DEL PROYECTO
+## 🔮 PHASE 9: INSTALAR MULTICOLOR → MMU/AMS
 
-1. **Primero estabilidad, luego velocidad**
-2. **Documentar TODO (fotos + commits)**
-3. **Un paso a la vez, verificar antes de avanzar**
-4. **Nunca forzar hardware**
-5. **Si algo no funciona: PARAR, analizar, preguntar**
-6. **No mezclar fases**
-7. **Rollback siempre posible**
+**Objetivo:** Sistema multicolor montado y funcionando
+
+**Opciones de hardware:**
+- ERCF (Enraged Rabbit Carrot Feeder)
+- AMS (Automatic Material System - Bambu Lab)
+- MMU2S (Prusa)
+- Tradrack
+- Otro sistema custom
+
+### **Tareas (depende de sistema elegido):**
+1. [ ] **Investigar sistemas multicolor** (ERCF recomendado para Voron)
+2. [ ] **Comprar hardware** MMU
+3. [ ] **Imprimir piezas** MMU (durante Phase 6-8)
+4. [ ] **Montar sistema multicolor** físicamente
+5. [ ] **Instalar filament buffers** (4-8 filamentos)
+6. [ ] **Instalar sensores filamento** (runout detection)
+7. [ ] **Cablear todo a Raspberry Pi** o controladora
+8. [ ] **Configurar Klipper** para multicolor
+9. [ ] **Purge bucket/tower** setup
+10. [ ] **Test cambios de tool** funcionales
+
+### **Criterio de éxito Phase 9:**
+✅ Sistema detecta 4+ filamentos correctamente
+✅ Cambios de tool funcionan (load/unload)
+✅ Purga/limpieza funciona
+✅ Sensores detectan runout
+
+**Duración estimada:** 8-12 horas
+**Estado:** 🔮 FUTURO
 
 ---
 
-**Última actualización:** 2025-12-21
-**Versión:** 2.0 (actualizado tras completar Phase 2)
-**Próxima revisión:** Después de completar Phase 3 (EBB42 CAN)
+## 🔮 PHASE 10: CALIBRAR MULTICOLOR → PERFILES
 
-**Cambios v2.0:**
-- Corregido: Dual Z (2 motores, no 1)
-- Actualizado: Arquitectura EBB42 CAN desde inicio (no toolhead stock temporal)
-- Reorganizado: Fases reducidas de 12 a 8 (más coherente)
-- Actualizado: Sensorless homing X/Y (sin endstops físicos)
-- Eliminado: Phase DC-DC converter (innecesario, PSU ya da 24V estable)
-- Fusionado: PT100 + extrusor + probe en Phase 3 (todo en EBB42 de una vez)
+**Objetivo:** Multicolor calibrado con perfiles funcionales
+
+### **Tareas - Calibración:**
+1. [ ] **Calibrar cambios de tool** (velocidad, retraction)
+2. [ ] **Ajustar purge volumes** por combinación de colores
+3. [ ] **Torre de purga** optimizada (altura, infill)
+4. [ ] **Tuning retraction multi-tool**
+5. [ ] **Ramming settings** (si usa ERCF)
+6. [ ] **Gestión de colores** en OrcaSlicer
+7. [ ] **Wipe sequences** (limpieza nozzle entre cambios)
+
+### **Tareas - Perfiles OrcaSlicer:**
+8. [ ] **Crear perfiles multicolor**
+9. [ ] **Configurar tool change scripts**
+10. [ ] **Ajustar purge/wipe settings**
+
+### **Criterio de éxito Phase 10:**
+✅ Primera impresión 2 colores exitosa
+✅ Cambios de tool limpios (sin contaminación)
+✅ Torre de purga eficiente
+✅ Sin oozing entre cambios
+
+**Duración estimada:** 6-8 horas
+**Estado:** 🔮 FUTURO
+
+---
+
+## 🔮 PHASE 11: VALIDAR 4-8-12 (MULTICOLOR)
+
+**Objetivo:** Validar multicolor con impresiones progresivas
+
+### **Metodología 4-8-12 (Multicolor):**
+
+#### **Test 1: 4 horas (2-3 colores)**
+- Modelo simple multicolor
+- Validar cambios de tool básicos
+
+#### **Test 2: 8 horas (3-4 colores)**
+- Modelo complejo multicolor
+- Validar purge volumes correctos
+
+#### **Test 3: 12 horas (4+ colores)**
+- Modelo muy complejo o grande multicolor
+- Confiabilidad sistema completo
+
+### **Criterio de éxito Phase 11:**
+✅ 3 impresiones multicolor completadas sin fallos
+✅ Colores limpios (sin bleeding)
+✅ Cambios de tool confiables
+✅ Torre de purga eficiente
+
+### **Resultado:**
+**🎉 SISTEMA MULTICOLOR 100% FUNCIONAL**
+
+**Duración estimada:** ~24-30 horas
+**Estado:** 🔮 FUTURO
+
+---
+
+## 🔮 PHASE 12: OPTIMIZACIÓN FINAL → PROYECTO COMPLETO
+
+**Objetivo:** Sistema completamente optimizado y documentado
+
+### **Tareas:**
+1. [ ] Fine-tuning multicolor (ajustes finales)
+2. [ ] Backup completo configuración
+   - printer.cfg versionado
+   - Perfiles OrcaSlicer exportados
+   - Macros documentadas
+3. [ ] Documentación completa
+   - Guías de troubleshooting
+   - Valores de referencia
+   - Procedimientos mantenimiento
+4. [ ] Test prints showcase
+   - Portafolio de impresiones exitosas
+   - Demostrar capacidades
+5. [ ] Optimizaciones finales
+   - Tweaks menores
+   - Macros avanzadas custom
+
+### **Resultado:**
+**🏆 PROYECTO COMPLETO - TRONXY X5SA TOTALMENTE MODERNIZADA**
+
+**Duración:** Variable
+**Estado:** 🔮 FUTURO
+
+---
+
+## 📊 TABLA RESUMEN FASES
+
+| Phase | Nombre | Tipo | Hardware | Duración | Estado |
+|-------|--------|------|----------|----------|--------|
+| 0 | Baseline | - | Stock | - | ✅ |
+| 1 | SKR prep | - | SKR + TMC2209 | 2h | ✅ |
+| 2 | SKR wiring | - | SKR cableada | 6h | ✅ |
+| **3** | **Eddy install** | **INSTALAR** | **+ Eddy Coil** | **4-6h** | **📋** |
+| **4** | **Stock calib** | **CALIBRAR** | **Stock** | **6-8h** | **⏳** |
+| **5** | **Validar 4-8-12** | **VALIDAR** | **Stock** | **24-30h** | **⏳** |
+| 5.5 | Fleje PEI | Opcional | + PEI sheet | 2-3h | 🔮 |
+| **6** | **Voron install** | **INSTALAR** | **+ Voron** | **6-8h** | **🔮** |
+| **7** | **Voron calib** | **CALIBRAR** | **Voron** | **6-8h** | **🔮** |
+| **8** | **Validar 4-8-12** | **VALIDAR** | **Voron** | **24-30h** | **🔮** |
+| **9** | **MMU install** | **INSTALAR** | **+ MMU** | **8-12h** | **🔮** |
+| **10** | **MMU calib** | **CALIBRAR** | **MMU** | **6-8h** | **🔮** |
+| **11** | **Validar 4-8-12** | **VALIDAR** | **MMU** | **24-30h** | **🔮** |
+| 12 | Optimización | Final | Todo | Variable | 🔮 |
+
+**Tiempo total estimado:** 120-150 horas (incluyendo impresiones)
+
+---
+
+## 🎯 MILESTONES CRÍTICOS
+
+### **Milestone 1: Hardware Stock Funcional** (fin Phase 5)
+✅ Impresora con nueva electrónica 100% validada
+✅ Hardware stock confiable
+✅ Listo para producción
+
+### **Milestone 2: Hardware Voron Funcional** (fin Phase 8)
+✅ Voron Stealthburner 100% validado
+✅ Velocidades superiores
+✅ Calidad profesional
+
+### **Milestone 3: Multicolor Funcional** (fin Phase 11)
+✅ Sistema multicolor completo
+✅ 4+ colores simultáneos
+✅ Producción multicolor
+
+### **Milestone 4: Proyecto Completo** (fin Phase 12)
+🏆 Tronxy X5SA completamente modernizada
+🏆 Capacidades nivel Voron + multicolor
+🏆 Documentación completa y replicable
+
+---
+
+## 🛠️ HERRAMIENTAS Y MATERIALES
+
+(Esta sección permanece sin cambios desde v2.0 - ver versiones anteriores en historial Git si necesitas el detalle completo)
+
+---
+
+## 📚 DOCUMENTACIÓN POR FASE
+
+### **Phase 3:**
+- [guides/phase3/LOG_INSTALACION.md](guides/phase3/LOG_INSTALACION.md)
+- [guides/phase3/GUIA_FOTOGRAFICA_INSTALACION.md](guides/phase3/GUIA_FOTOGRAFICA_INSTALACION.md)
+- [guides/phase3/EDDY_COIL_INSTALLATION.md](guides/phase3/EDDY_COIL_INSTALLATION.md)
+- [guides/phase3/ARQUITECTURA_PHASE3.md](guides/phase3/ARQUITECTURA_PHASE3.md)
+
+### **Phase 4:**
+- [guides/phase3/CALIBRACION_COMPLETA.md](guides/phase3/CALIBRACION_COMPLETA.md)
+- [guides/phase3/CONFIGURACION_KLIPPER.md](guides/phase3/CONFIGURACION_KLIPPER.md)
+- [orca-slicer-profiles/](orca-slicer-profiles/)
+
+### **Phase 5:**
+- A crear: `guides/phase5/VALIDACION_4_8_12.md`
+
+### **Phase 6:**
+- [stls/phase12/PRINT_QUEUE_PHASE12.md](stls/phase12/PRINT_QUEUE_PHASE12.md)
+- A crear: `guides/phase6/VORON_INSTALLATION.md`
+
+### **Phases 7-12:**
+- A crear según progreso
+
+---
+
+## 🔄 REVERSIBILIDAD
+
+| Fase | ¿Reversible? | Cómo |
+|------|--------------|------|
+| 0-2 | ⚠️ Difícil | Reinstalar electrónica stock |
+| 3-5 | ⚠️ Difícil | Mantener piezas stock guardadas |
+| 6-8 | ✅ Sí | Reinstalar toolhead stock (si guardado) |
+| 9-11 | ✅ Sí | Desmontar MMU, volver a Voron single-color |
+| 12 | ✅ Sí | Sistema modular |
+
+---
+
+## 📝 FILOSOFÍA DEL ROADMAP v3.0
+
+1. **INSTALAR → CALIBRAR → VALIDAR (4-8-12)**
+2. **Cada grupo termina con validación real de producción**
+3. **No avanzar hasta validar completamente fase anterior**
+4. **Documentar TODO en tiempo real**
+5. **Commits frecuentes, rollback siempre posible**
+6. **Hardware guardado (reversibilidad)**
+7. **Sin prisa, sin errores**
+
+---
+
+**Última actualización:** 2025-12-27
+**Versión:** 3.0
+**Cambios v3.0:**
+- Reorganizado con metodología 4-8-12
+- 12 phases claramente definidas
+- Grupos lógicos: Stock → Voron → Multicolor
+- Validaciones con impresiones reales
+- Fleje PEI en Phase 5.5 (antes de Voron)
+- Criterios de éxito específicos por fase
+- Milestones críticos destacados
+
+**Próxima revisión:** Después de completar Phase 3

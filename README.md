@@ -58,7 +58,7 @@ La guía principal con:
 
 | Documento | Descripción |
 |-----------|-------------|
-| **[ROADMAP.md](ROADMAP.md)** | Plan técnico completo del proyecto (8 fases) |
+| **[ROADMAP.md](ROADMAP.md)** | Plan técnico completo del proyecto (12 fases - metodología 4-8-12) |
 | **[HARDWARE_REFERENCE.md](HARDWARE_REFERENCE.md)** | Especificaciones técnicas de todos los componentes |
 | **[guides/](guides/)** | Guías paso a paso con fotos |
 
@@ -87,9 +87,10 @@ Instalación y cableado de EBB42 en toolhead con comunicación CAN bus
 
 ### 📋 Próximo
 
-- Phase 4: Firmware Klipper + configuración completa
-- Phase 5: Primera impresión + calibraciones
-- Phase 6-7: Input Shaper + optimizaciones finales
+- Phase 4: CALIBRAR Stock → Perfiles funcionales
+- Phase 5: VALIDAR 4-8-12 Stock → Stock 100% validado
+- Phase 6: INSTALAR Voron → Toolhead nuevo
+- Phase 7-12: Voron upgrade completo + Multicolor
 
 ---
 
@@ -99,7 +100,7 @@ Instalación y cableado de EBB42 en toolhead con comunicación CAN bus
 x5sa-skr-klipper/
 ├── README.md                   # ⬅️ Estás aquí
 ├── GUIDE.md                    # Guía de migración principal
-├── ROADMAP.md                  # Plan técnico del proyecto
+├── ROADMAP.md                  # Plan técnico del proyecto (v3.0 - 12 fases)
 ├── HARDWARE_REFERENCE.md       # Especificaciones hardware
 │
 ├── guides/                     # Guías paso a paso
@@ -268,18 +269,20 @@ Eres libre de:
 ## 📊 Progreso del Proyecto
 
 ```
-Phase 0: ████████████ 100% ✅ Baseline
-Phase 1: ████████████ 100% ✅ SKR preparación
-Phase 2: ████████████ 100% ✅ SKR cableado
-Phase 3: ████░░░░░░░░  30% 🔄 EBB42 CAN (en curso)
-Phase 4: ░░░░░░░░░░░░   0% ⏸️ Firmware
-Phase 5: ░░░░░░░░░░░░   0% ⏸️ Primera impresión
-Phase 6: ░░░░░░░░░░░░   0% ⏸️ Input Shaper
-Phase 7: ░░░░░░░░░░░░   0% ⏸️ Calibraciones finales
+Phase 0-2: ████████████ 100% ✅ Base electrónica
+Phase 3:   ████████████ 100% 📋 INSTALAR Eddy → G28 funcional (hardware OK)
+Phase 4:   ░░░░░░░░░░░░   0% ⏳ CALIBRAR Stock → Perfiles funcionales
+Phase 5:   ░░░░░░░░░░░░   0% ⏳ VALIDAR 4-8-12 → Stock 100%
+Phase 6:   ░░░░░░░░░░░░   0% 🔮 INSTALAR Voron → Toolhead nuevo
+Phase 7:   ░░░░░░░░░░░░   0% 🔮 CALIBRAR Voron → Perfiles Orbiter
+Phase 8:   ░░░░░░░░░░░░   0% 🔮 VALIDAR 4-8-12 → Voron 100%
+Phase 9-11: ░░░░░░░░░░░░   0% 🔮 Multicolor (MMU)
+Phase 12:  ░░░░░░░░░░░░   0% 🔮 Optimización final
 ```
 
-**Progreso total:** ~35% (8h de 22-32h estimadas)
-**Última actualización:** 2025-12-21
+**Metodología:** 4-8-12 validación (impresiones progresivas)
+**Progreso total:** Phase 3 completada (hardware), pendiente calibración
+**Última actualización:** 2025-12-27
 
 ---
 

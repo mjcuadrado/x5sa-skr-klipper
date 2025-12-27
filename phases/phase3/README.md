@@ -36,7 +36,7 @@ El probe sensor **Tronxy XY-08N** documentado inicialmente fue **abandonado** po
 - 📋 Pinout completo de EBB42
 - 🔧 Plan de cableado detallado (versión toolhead)
 - ⚙️ Configuración Klipper completa
-- 📝 Plan de implementación con 8 fases
+- 📝 Plan de implementación con fases detalladas
 - 🛡️ Troubleshooting y seguridad
 - ⚠️ **Nota:** Asume montaje en toolhead (largo plazo)
 
