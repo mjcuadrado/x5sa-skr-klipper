@@ -74,10 +74,14 @@ make menuconfig
 [*] Enable extra low-level configuration options
     Micro-controller Architecture (Raspberry Pi RP2040)
     Bootloader offset (No bootloader)
-    Flash chip (W25Q080 with CLKDIV 2)
+    Flash chip (W25Q080 with CLKDIV 2)   <-- IMPORTANTE: NO usar GENERIC_03H
     Communication interface (USB)
     USB ids  -->  (usar valores por defecto)
 ```
+
+> **CRITICO:** El flash chip DEBE ser `W25Q080 with CLKDIV 2`.
+> Si usas `GENERIC_03H with CLKDIV 4` el sensor LDC1612 NO funcionara
+> y obtendras errores de I2C como "Invalid ldc1612 id (got 0,0)".
 
 **Guardar y salir** (Q, Y)
 
@@ -200,29 +204,36 @@ serial: /dev/serial/by-id/usb-Klipper_rp2040_XXXXX-if00
 ```ini
 [probe_eddy_current btt_eddy]
 sensor_type: ldc1612
-sensor_pin: eddy:gpio26
-
-x_offset: 0.0
-y_offset: 0.0
 z_offset: 1.0
-
-speed: 120
-lift_speed: 60.0
-samples: 2
-samples_result: average
-sample_retract_dist: 2.0
-samples_tolerance: 0.050
-samples_tolerance_retries: 3
+i2c_mcu: eddy
+i2c_bus: i2c0f
+x_offset: 0
+y_offset: 0
+data_rate: 500
 ```
+
+> **NOTA:** `i2c_bus: i2c0f` es el bus I2C correcto para Eddy USB/Duo.
+> El LDC1612 se comunica internamente via I2C, no directamente por GPIO.
 
 ### 5.3 Sensor de temperatura (compensacion termica)
 
+Para habilitar compensacion termica con el termistor integrado:
+
 ```ini
-[temperature_sensor eddy_temp]
+[temperature_probe btt_eddy]
 sensor_type: Generic 3950
-sensor_pin: eddy:gpio27
-min_temp: 0
-max_temp: 85
+sensor_pin: eddy:gpio26
+horizontal_move_z: 2
+```
+
+Opcionalmente, para monitorear la temperatura del MCU:
+
+```ini
+[temperature_sensor btt_eddy_mcu]
+sensor_type: temperature_mcu
+sensor_mcu: eddy
+min_temp: 10
+max_temp: 100
 ```
 
 ### 5.4 Reiniciar Klipper
@@ -308,6 +319,32 @@ horizontal_move_z: 2
 
 ## 7. Troubleshooting
 
+### Error: "Invalid ldc1612 id (got 0,0 vs 5449,3055)"
+
+**CAUSA MAS COMUN:** Firmware compilado con flash chip incorrecto.
+
+**Solucion:**
+1. Re-flashear el firmware con la configuracion correcta:
+   ```
+   Flash chip (W25Q080 with CLKDIV 2)   <-- CORRECTO
+   ```
+   **NO usar:** `GENERIC_03H with CLKDIV 4` (esto causa el error)
+
+2. Verificar el switch USB/CAN en el Eddy Duo esta en posicion USB
+
+3. Re-flashear siguiendo los pasos de la seccion 3
+
+### Error: "I2C START READ NACK" o "Unable to obtain 'i2c_read_response'"
+
+**Causas:**
+1. Firmware incorrecto (ver error anterior)
+2. i2c_bus incorrecto en configuracion
+
+**Solucion:**
+- Usar `i2c_bus: i2c0f` (NO software I2C)
+- Verificar firmware usa `W25Q080 with CLKDIV 2`
+- Re-flashear firmware si es necesario
+
 ### Error: "mcu 'eddy': Unable to connect"
 
 **Causas:**
@@ -346,10 +383,11 @@ ls /dev/serial/by-id/usb-Klipper_rp2040*
 
 **Causas:**
 1. Sensor danado
-2. Pin incorrecto en configuracion
+2. Comunicacion I2C fallida (ver errores de I2C arriba)
 
 **Solucion:**
-- Verificar `sensor_pin: eddy:gpio26`
+- Verificar firmware correcto
+- Verificar `i2c_bus: i2c0f` en configuracion
 - Probar acercar metal al sensor
 
 ### Lecturas inconsistentes / derivas
