@@ -2,8 +2,9 @@
 
 **Fecha:** 2026-01-09
 **Hardware:** BIGTREETECH Eddy Duo (RP2040 + LDC1612)
-**Conexion:** USB directo a Raspberry Pi
-**Version Guia:** 1.0
+**Conexion:** USB directo a host (Raspberry Pi o PC)
+**Version Guia:** 1.1
+**Estado:** VERIFICADO Y FUNCIONANDO
 
 ---
 
@@ -196,7 +197,8 @@ En `printer.cfg`, anadir despues del MCU principal:
 # Probe MCU - BTT Eddy Duo (RP2040) via USB
 [mcu eddy]
 serial: /dev/serial/by-id/usb-Klipper_rp2040_XXXXX-if00
-# Reemplazar XXXXX con tu ID real
+restart_method: command
+# Reemplazar XXXXX con tu ID real (usar: ls /dev/serial/by-id/usb-Klipper_rp2040*)
 ```
 
 ### 5.2 Configurar el probe
@@ -207,13 +209,15 @@ sensor_type: ldc1612
 z_offset: 1.0
 i2c_mcu: eddy
 i2c_bus: i2c0f
+i2c_address: 42
 x_offset: 0
 y_offset: 0
-data_rate: 500
 ```
 
-> **NOTA:** `i2c_bus: i2c0f` es el bus I2C correcto para Eddy USB/Duo.
-> El LDC1612 se comunica internamente via I2C, no directamente por GPIO.
+> **NOTA:**
+> - `i2c_bus: i2c0f` es el bus I2C interno del Eddy Duo (GPIO20/21)
+> - `i2c_address: 42` es la direccion del LDC1612 (0x2A)
+> - NO usar `data_rate` en Klipper mainline (solo en fork BTT)
 
 ### 5.3 Sensor de temperatura (compensacion termica)
 
@@ -248,72 +252,76 @@ O desde Mainsail: **Power** > **Host** > **Firmware Restart**
 
 ## 6. Calibracion
 
-### 6.1 Verificar comunicacion
+### 6.1 Calibrar drive current (PASO 1 - OBLIGATORIO)
+
+**IMPORTANTE:** Este paso DEBE hacerse primero, con el toolhead lejos de la cama.
 
 ```gcode
-QUERY_PROBE
-```
+# Mover Z manualmente si no puedes hacer home aun
+SET_KINEMATIC_POSITION Z=50
+G1 Z50 F600
 
-Resultado esperado: `probe: open`
-
-Si hay error, ver seccion [Troubleshooting](#7-troubleshooting).
-
-### 6.2 Calibrar drive current
-
-**IMPORTANTE:** Mover toolhead lejos de la cama primero (Z alto)
-
-```gcode
+# Calibrar drive current
 LDC_CALIBRATE_DRIVE_CURRENT CHIP=btt_eddy
 ```
 
-Guardar:
+Resultado esperado:
+```
+probe_eddy_current btt_eddy: reg_drive_current: 16
+```
+
+Guardar inmediatamente:
 ```gcode
 SAVE_CONFIG
 ```
 
-### 6.3 Calibrar Z offset
+### 6.2 Calibrar Z offset (PASO 2 - OBLIGATORIO)
 
-Despues del reinicio:
+Despues del reinicio (SAVE_CONFIG reinicia automaticamente):
 
 ```gcode
-G28                                    # Home all
+# Home X e Y primero
+G28 X Y
+
+# Mover Z a posicion segura
+SET_KINEMATIC_POSITION Z=50
+G1 Z50 F600
+
+# Calibrar Z offset
 PROBE_EDDY_CURRENT_CALIBRATE CHIP=btt_eddy
 ```
 
 **Proceso interactivo:**
 
-1. El nozzle se acercara a la cama
-2. Usar **TESTZ Z=-0.1** para bajar
+1. El nozzle bajara hacia la cama automaticamente
+2. Usar **TESTZ Z=-0.1** para bajar (incrementos pequeños)
 3. Usar **TESTZ Z=+0.1** para subir
-4. Objetivo: papel desliza con ligera resistencia
-5. Cuando este correcto: **ACCEPT**
-6. Guardar: **SAVE_CONFIG**
+4. Usar **TESTZ Z=-0.01** para ajuste fino
+5. **Objetivo:** papel desliza con ligera resistencia bajo el nozzle
+6. Cuando este correcto: **ACCEPT**
+7. Guardar: **SAVE_CONFIG**
 
-### 6.4 Verificar Z offset
+### 6.3 Verificar funcionamiento
+
+Despues del reinicio:
 
 ```gcode
-G28
-G1 X165 Y165 F6000
-PROBE
+G28                         # Home completo (ahora deberia funcionar)
+G1 X165 Y165 F6000          # Mover al centro
+PROBE                       # Test de probe
 ```
 
 Deberia parar cerca de Z=0.
 
-### 6.5 Compensacion termica (opcional)
+### 6.4 Compensacion termica (opcional)
 
 Para mejor precision con cama caliente:
 
 1. Calentar cama a temperatura de impresion (60-80C)
 2. Esperar 10-15 minutos para estabilizar
-3. Repetir calibracion de Z offset
+3. Repetir calibracion de Z offset (6.2)
 
-```ini
-# Activar en printer.cfg si se desea
-[temperature_probe btt_eddy]
-sensor_type: Generic 3950
-sensor_pin: eddy:gpio27
-horizontal_move_z: 2
-```
+La seccion `[temperature_probe btt_eddy]` ya esta configurada para esto.
 
 ---
 
@@ -339,11 +347,21 @@ horizontal_move_z: 2
 **Causas:**
 1. Firmware incorrecto (ver error anterior)
 2. i2c_bus incorrecto en configuracion
+3. Falta i2c_address
 
 **Solucion:**
-- Usar `i2c_bus: i2c0f` (NO software I2C)
+- Usar `i2c_bus: i2c0f` (NO software I2C con gpio)
+- Anadir `i2c_address: 42` explicitamente
 - Verificar firmware usa `W25Q080 with CLKDIV 2`
 - Re-flashear firmware si es necesario
+
+### Error: "Option 'data_rate' is not valid"
+
+**Causa:** Usando Klipper mainline, no fork BTT
+
+**Solucion:**
+- Quitar la linea `data_rate: 500` de la configuracion
+- Este parametro solo existe en el fork de BTT, no en Klipper mainline
 
 ### Error: "mcu 'eddy': Unable to connect"
 
@@ -426,6 +444,41 @@ Cuando instales la EBB42 con Stealthburner (Phase 12+), podras elegir:
 
 ---
 
-**Version:** 1.0
+## Resumen de Configuracion Final
+
+```ini
+[mcu eddy]
+serial: /dev/serial/by-id/usb-Klipper_rp2040_XXXXX-if00
+restart_method: command
+
+[temperature_sensor btt_eddy_mcu]
+sensor_type: temperature_mcu
+sensor_mcu: eddy
+min_temp: 10
+max_temp: 100
+
+[probe_eddy_current btt_eddy]
+sensor_type: ldc1612
+z_offset: 1.0
+i2c_mcu: eddy
+i2c_bus: i2c0f
+i2c_address: 42
+x_offset: 0
+y_offset: 0
+
+[temperature_probe btt_eddy]
+sensor_type: Generic 3950
+sensor_pin: eddy:gpio26
+horizontal_move_z: 2
+```
+
+---
+
+**Version:** 1.1
 **Fecha:** 2026-01-09
 **Nota:** Reemplaza Eddy Coil V1.0 que se dano. Eddy Duo elegido por mejor compatibilidad con cama de hierro.
+**Cambios v1.1:**
+- Configuracion verificada y funcionando
+- Añadido i2c_address: 42 (requerido)
+- Quitado data_rate (no valido en Klipper mainline)
+- Documentacion de errores comunes actualizada
