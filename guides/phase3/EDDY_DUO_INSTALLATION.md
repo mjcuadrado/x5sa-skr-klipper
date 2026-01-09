@@ -227,7 +227,7 @@ Para habilitar compensacion termica con el termistor integrado:
 [temperature_probe btt_eddy]
 sensor_type: Generic 3950
 sensor_pin: eddy:gpio26
-horizontal_move_z: 2
+horizontal_move_z: 5
 ```
 
 Opcionalmente, para monitorear la temperatura del MCU:
@@ -469,7 +469,7 @@ y_offset: 0
 [temperature_probe btt_eddy]
 sensor_type: Generic 3950
 sensor_pin: eddy:gpio26
-horizontal_move_z: 2
+horizontal_move_z: 5
 ```
 
 ---
